@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useTheme } from "@mui/material";
 import { Card } from "@mui/material";
 import { IconCamera } from "@tabler/icons-react";
@@ -52,7 +53,7 @@ const CameraCard = ({ onQRScanned }: CameraCardProps) => {
       turnOffWebcam();
       stopScanner();
     }
-
+   
     setCameraOpen(!cameraOpen);
   };
 
