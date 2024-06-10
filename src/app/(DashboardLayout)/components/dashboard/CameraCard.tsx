@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useTheme } from "@mui/material";
 import { Card } from "@mui/material";
 import { IconCamera } from "@tabler/icons-react";
 import QrScanner from "qr-scanner";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Webcam from "react-webcam";
 
 type CameraCardProps = {
@@ -11,47 +12,78 @@ type CameraCardProps = {
 
 const CameraCard = ({ onQRScanned }: CameraCardProps) => {
   const theme = useTheme();
+  const [cameraId, setCameraId] = useState<string | undefined>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [webcam, setWebcam] = useState<any | null>(null);
+  const [scanner, setScanner] = useState<QrScanner | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
   const mainColor = theme.palette.primary.main;
-  const webcamRef = useRef(null);
 
-  const turnOffWebcam = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const webcam: any = webcamRef.current;
-    if (webcam) {
-      webcam.video.srcObject.getTracks().forEach((track: MediaStreamTrack) => {
-        track.stop();
-      });
+  const setMainCamera = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const cameraDevices = devices.find(
+      (device) => device.kind === "videoinput"
+    );
+
+    if (cameraDevices) {
+      setCameraId(cameraDevices.deviceId);
     }
   };
 
-  const openCloseCamera = () => {
+  const stopScanner = () => {
+    if (scanner) {
+      scanner.destroy();
+      setScanner(null);
+    }
+  };
+
+  const turnOffWebcam = () => {
+    if (webcam) {
+      webcam?.video?.srcObject
+        ?.getTracks()
+        .forEach((track: MediaStreamTrack) => {
+          track.stop();
+        });
+    }
+  };
+
+  const openCloseCamera = async () => {
     if (cameraOpen) {
       turnOffWebcam();
+      stopScanner();
     }
 
     setCameraOpen(!cameraOpen);
   };
 
   const initQRScanner = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const webcam: any = webcamRef.current;
     if (webcam) {
-      const qrScanner = new QrScanner(
-        webcam.video,
-        (result: QrScanner.ScanResult) => {
-          if (onQRScanned) {
-            onQRScanned(result.data);
-          }
-        },
-        { maxScansPerSecond: 2 }
-      );
+      if (webcam.video) {
+        const qrScanner = new QrScanner(
+          webcam.video,
+          (result: QrScanner.ScanResult) => {
+            if (onQRScanned) {
+              onQRScanned(result.data);
+            }
+          },
+          { maxScansPerSecond: 2 }
+        );
 
-      qrScanner.start();
+        qrScanner.start();
+      }
     }
   };
 
-  useEffect(initQRScanner, [cameraOpen, onQRScanned]);
+  const initCamera = async () => {
+    await setMainCamera();
+  };
+
+  useEffect(() => {
+    if (cameraOpen) {
+      initCamera();
+      initQRScanner();
+    }
+  }, [cameraOpen, onQRScanned, webcam, cameraId]);
 
   return (
     <Card
@@ -70,7 +102,12 @@ const CameraCard = ({ onQRScanned }: CameraCardProps) => {
     >
       {cameraOpen ? (
         <Webcam
-          ref={webcamRef}
+          ref={(ref) => {
+            setWebcam(ref);
+          }}
+          videoConstraints={{
+            deviceId: cameraId,
+          }}
           style={{
             width: "100%",
             height: "100%",
