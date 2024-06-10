@@ -1,5 +1,6 @@
 {
-  "name": "modernize-next-free",
+  "name": "siensi",
+  "description": "Web application that allow users to records guest attendances.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

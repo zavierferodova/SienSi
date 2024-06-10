@@ -14,6 +14,7 @@ const PageContainer = ({ title, description, children }: Props) => (
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
+        <link rel="manifest" href="/manifest.json"/>
       </Helmet>
       {children}
     </div>
