@@ -18,7 +18,11 @@ import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import GuestModel from "@/model/guest";
 import CustomTextField from "../forms/theme-elements/CustomTextField";
+import { z } from "zod";
+import { baselightTheme } from "@/utils/theme/DefaultColors";
+import { customAlphabet } from "nanoid";
 
+const nanoid = customAlphabet("1234567890abcdef", 10);
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
@@ -36,6 +40,31 @@ type DialogCustomizeGuestProps = {
   onSave?: (guest: GuestModel) => void;
 };
 
+const guestFormSchema = z.object({
+  key: z
+    .string()
+    .min(3, {
+      message: "Kunci presensi minimal 3 karakter",
+    })
+    .max(30, { message: "Kunci presensi maksimal 30 karakter" }),
+  name: z.string().min(3, {
+    message: "Nama minimal 3 karakter",
+  }),
+  gender: z.enum(["male", "female"], {
+    errorMap: (issue, ctx) => ({ message: "Pilih salah satu jenis kelamin" }),
+  }),
+  address: z
+    .string()
+    .min(3, { message: "Alamat tidak valid" })
+    .max(255, { message: "Alamat maksimal 255 karakter" })
+    .optional(),
+  email: z.string().email({ message: "Email tidak valid" }).optional(),
+  phone: z
+    .string()
+    .min(10, { message: "Nomor telepon tidak valid" })
+    .max(13, { message: "Nomor telepon tidak valid" })
+    .optional(),
+});
 const DialogCustomizeGuest = ({
   open,
   onClose,
@@ -43,149 +72,122 @@ const DialogCustomizeGuest = ({
   mode,
   guest,
 }: DialogCustomizeGuestProps) => {
-  const [presenceKey, setPresenceKey] = useState("");
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const [presenceKeyError, setPresenceKeyError] = useState(false);
-  const [presenceKeyErrorMessage, setPresenceKeyErrorMessage] = useState("");
-  const [nameError, setNameError] = useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = useState("");
-  const [genderError, setGenderError] = useState(false);
-  const [genderErrorMessage, setGenderErrorMessage] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [defaultValues, setDefaultValues] = useState({
+    key: "",
+    name: "",
+    gender: "",
+    address: "",
+    email: "",
+    phone: "",
+  });
+  const [formError, setFormError] = useState({
+    key: "",
+    name: "",
+    gender: "",
+    address: "",
+    email: "",
+    phone: "",
+  });
 
   if (guest == null && mode == "edit") {
     throw new Error("Guest is required when mode is edit");
   }
 
-  const textFieldLimitChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    limit: number,
-    dispatcher: React.Dispatch<React.SetStateAction<string>>,
-    allowedCharacters?: string
-  ) => {
-    if (allowedCharacters) {
-      const regex = new RegExp(`^[${allowedCharacters}]+$`);
-      if (!regex.test(e.target.value)) {
-        e.target.value = e.target.value.slice(0, e.target.value.length - 1);
-      }
-    }
+  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    if (e.target.value.length > limit) {
-      e.target.value = e.target.value.slice(0, limit);
-    }
-
-    dispatcher(e.target.value);
-  };
-
-  const getGuestData = () => {
-    return {
-      id: guest?.id ?? "",
-      key: presenceKey,
-      name,
-      gender,
-      address,
-      email,
-      phone,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as GuestModel;
-  };
-
-  const resetForm = () => {
-    setPresenceKey("");
-    setName("");
-    setGender("");
-    setAddress("");
-    setEmail("");
-    setPhone("");
-
-    setPresenceKeyError(false);
-    setPresenceKeyErrorMessage("");
-    setNameError(false);
-    setNameErrorMessage("");
-    setGenderError(false);
-    setGenderErrorMessage("");
-    setEmailError(false);
-    setEmailErrorMessage("");
-  };
-
-  const validateForm = () => {
-    let isValid = true;
-
-    if (presenceKey.length == 0) {
-      setPresenceKeyError(true);
-      setPresenceKeyErrorMessage("Kunci presensi harus diisi");
-      isValid = false;
-    } else {
-      setPresenceKeyError(false);
-      setPresenceKeyErrorMessage("");
-    }
-
-    if (name.length == 0) {
-      setNameError(true);
-      setNameErrorMessage("Nama harus diisi");
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage("");
-    }
-
-    if (gender.length == 0) {
-      setGenderError(true);
-      setGenderErrorMessage("Kelamin harus diisi");
-      isValid = false;
-    }
-
-    if (
-      email.length > 0 &&
-      email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) == null
-    ) {
-      setEmailError(true);
-      setEmailErrorMessage("Email tidak valid");
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
-  const handleSave = () => {
-    if (validateForm()) {
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      key: formData.get("key")?.toString() || "",
+      name: formData.get("name")?.toString() || "",
+      gender: formData.get("gender")?.toString() || "",
+    };
+    try {
       if (onSave != null) {
-        onSave(getGuestData());
+        guestFormSchema.parse({
+          ...data,
+          ...(formData.get("address")
+            ? { address: formData.get("address")?.toString() }
+            : {}),
+          ...(formData.get("email")
+            ? { email: formData.get("email")?.toString() }
+            : {}),
+          ...(formData.get("phone")
+            ? { phone: formData.get("phone")?.toString() }
+            : {}),
+        });
+
+        onSave({
+          ...data,
+          address: formData.get("address")?.toString() ?? "",
+          email: formData.get("email")?.toString() ?? "",
+          phone: formData.get("phone")?.toString() ?? "",
+          id: guest?.id ?? "",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        } as GuestModel);
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors = {
+          key: "",
+          name: "",
+          gender: "",
+          address: "",
+          email: "",
+          phone: "",
+        };
+
+        error.errors.forEach((err) => {
+          const field = err.path[0] as keyof typeof formError;
+          newErrors[field] = err.message;
+        });
+
+        setFormError(newErrors);
       }
     }
   };
 
   const handleClose = () => {
     if (onClose != null) {
+      setFormError({
+        key: "",
+        name: "",
+        gender: "",
+        address: "",
+        email: "",
+        phone: "",
+      });
       onClose();
     }
   };
 
-  useEffect(() => {
-    if (!open) {
-      resetForm();
-    }
-  }, [open])
+  const generateKey = () => {
+    const key = nanoid();
+    setDefaultValues({ ...defaultValues, key });
+  };
 
   useEffect(() => {
     if (mode === "edit" && guest != null) {
-      setPresenceKey(guest.key)
-      setName(guest.name)
-      setGender(guest.gender)
-      setAddress(guest.address)
-      setEmail(guest.email)
-      setPhone(guest.phone)
+      setDefaultValues({
+        key: guest.key,
+        name: guest.name,
+        gender: guest.gender,
+        address: guest.address,
+        email: guest.email,
+        phone: guest.phone,
+      });
+    } else {
+      setDefaultValues({
+        key: "",
+        name: "",
+        gender: "",
+        address: "",
+        email: "",
+        phone: "",
+      });
     }
-
-  }, [guest, mode])
-
+  }, [guest, mode]);
   return (
     <>
       <Dialog
@@ -194,108 +196,131 @@ const DialogCustomizeGuest = ({
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative" }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Tamu
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleSave}>
-              {mode == "add" ? "Simpan" : "Ubah"}
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <Container sx={{ padding: 2, overflowY: "auto" }}>
-          <Stack spacing={2}>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                Key
+        <form onSubmit={handleSave}>
+          <AppBar sx={{ position: "relative" }}>
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Tamu
               </Typography>
-              <CustomTextField
-                value={presenceKey}
-                error={presenceKeyError}
-                helperText={presenceKeyErrorMessage}
-                onChange={(e) => textFieldLimitChange(e, 30, setPresenceKey)}
-                placeholder="Kunci presensi"
-              />
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                Name
-              </Typography>
-              <CustomTextField
-                value={name}
-                error={nameError}
-                helperText={nameErrorMessage}
-                onChange={(e) => textFieldLimitChange(e, 80, setName)}
-                placeholder="Contoh: Abdullah"
-              />
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                Kelamin
-              </Typography>
-              <FormControl error={genderError}>
-                <Select
-                  displayEmpty
-                  error={genderError}
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
+              <Button autoFocus color="inherit" type="submit">
+                {mode == "add" ? "Tambakan" : "Simpan"}
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <Container sx={{ padding: 2, overflowY: "auto" }}>
+            <Stack spacing={2}>
+              <Stack spacing={1} position="relative">
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Key
+                </Typography>
+                <CustomTextField
+                  helperText={formError.key}
+                  value={defaultValues.key}
+                  onChange={(e) =>
+                    setDefaultValues({
+                      ...defaultValues,
+                      key: e.target.value,
+                    })
+                  }
+                  name="key"
+                  placeholder="Kunci presensi"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={generateKey}
+                  sx={{
+                    position: "absolute",
+                    right: 10,
+                    bottom: 10,
+                    width: "fit-content",
+                  }}
                 >
-                  <MenuItem value="" disabled>
-                    Pilih salah satu
-                  </MenuItem>
-                  <MenuItem value="male">Laki - Laki</MenuItem>
-                  <MenuItem value="female">Perempuan</MenuItem>
-                </Select>
-                <FormHelperText>{genderErrorMessage}</FormHelperText>
-              </FormControl>
+                  Generate
+                </Button>
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Name
+                </Typography>
+                <CustomTextField
+                  defaultValue={defaultValues.name}
+                  name="name"
+                  helperText={formError.name}
+                  placeholder="Budi Rakhmadi"
+                />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Kelamin
+                </Typography>
+                <FormControl>
+                  <Select
+                    displayEmpty
+                    name="gender"
+                    defaultValue={defaultValues.gender}
+                  >
+                    <MenuItem value="" disabled>
+                      Pilih salah satu
+                    </MenuItem>
+                    <MenuItem value="male">Laki - Laki</MenuItem>
+                    <MenuItem value="female">Perempuan</MenuItem>
+                  </Select>
+                  <FormHelperText
+                    sx={{ color: baselightTheme.palette.error.main }}
+                  >
+                    {formError.gender}
+                  </FormHelperText>
+                </FormControl>
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Alamat
+                </Typography>
+                <CustomTextField
+                  defaultValue={defaultValues.address}
+                  name="address"
+                  helperText={formError.address}
+                  rows={4}
+                  multiline
+                  placeholder="Kec. Provinsi, Kota"
+                />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Email
+                </Typography>
+                <CustomTextField
+                  inputMode="email"
+                  defaultValue={defaultValues.email}
+                  name="email"
+                  helperText={formError.email}
+                  placeholder="example@mail.com"
+                />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Phone
+                </Typography>
+                <CustomTextField
+                  defaultValue={defaultValues.phone}
+                  inputMode="tel"
+                  name="phone"
+                  helperText={formError.phone}
+                  placeholder="+628123456789"
+                />
+              </Stack>
             </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                Alamat
-              </Typography>
-              <CustomTextField
-                value={address}
-                onChange={(e) => textFieldLimitChange(e, 255, setAddress)}
-                rows={4}
-                multiline
-                placeholder="Kec. Provinsi, Kota"
-              />
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                Email
-              </Typography>
-              <CustomTextField
-                inputMode="email"
-                value={email}
-                error={emailError}
-                helperText={emailErrorMessage}
-                onChange={(e) => textFieldLimitChange(e, 255, setEmail)}
-                placeholder="example@mail.com"
-              />
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                Phone
-              </Typography>
-              <CustomTextField
-                value={phone}
-                inputMode="tel"
-                onChange={(e) => textFieldLimitChange(e, 20, setPhone, "+0-9")}
-                placeholder="+628123456789"
-              />
-            </Stack>
-          </Stack>
-        </Container>
+          </Container>
+        </form>
       </Dialog>
     </>
   );
