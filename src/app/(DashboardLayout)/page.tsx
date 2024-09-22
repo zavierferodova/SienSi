@@ -1,15 +1,15 @@
 "use client";
 import { Stack } from "@mui/material";
-import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import CameraCard from "@/app/(DashboardLayout)/components/dashboard/CameraCard";
-import GuestTable from "@/app/(DashboardLayout)/components/dashboard/GuestTable";
-import AttendanceTable from "./components/dashboard/AttendanceTable";
-import DialogCustomizeGuest from "./components/dashboard/DialogCustomizeGuest";
-import DialogQRGuest from "./components/dashboard/DialogQRGuest";
-import ConsecutiveSnackbars from "./components/dashboard/ConsecutiveSnackbars";
-import { useDashboardController } from "./controller";
-import DialogQuestion from "./components/dashboard/DialogQuestion";
-import DialogDetailAttendance from "./components/dashboard/DialogDetailAttendance";
+import PageContainer from "@/components/container/PageContainer";
+import CameraCard from "@/components/dashboard/CameraCard";
+import GuestTable from "@/components/dashboard/GuestTable";
+import AttendanceTable from "../../components/dashboard/AttendanceTable";
+import DialogCustomizeGuest from "../../components/dashboard/DialogCustomizeGuest";
+import DialogQRGuest from "../../components/dashboard/DialogQRGuest";
+import ConsecutiveSnackbars from "../../components/dashboard/ConsecutiveSnackbars";
+import { useDashboardController } from "../../controller/dashboard-controller";
+import DialogQuestion from "../../components/dashboard/DialogQuestion";
+import DialogDetailAttendance from "../../components/dashboard/DialogDetailAttendance";
 // import DialogDeleteGuest from "./components/dashboard/DialogDeleteGuest";
 
 const Dashboard = () => {

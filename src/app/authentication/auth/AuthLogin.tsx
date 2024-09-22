@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Stack,
-} from "@mui/material";
+import { Box, Typography, Button, Stack } from "@mui/material";
 import Link from "next/link";
 
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import CustomTextField from "@/components/forms/theme-elements/CustomTextField";
 
 interface loginType {
   authError?: boolean;
@@ -17,7 +12,13 @@ interface loginType {
   onSubmit?: (email: string, password: string) => void;
 }
 
-const AuthLogin = ({ authError, title, subtitle, subtext, onSubmit }: loginType) => {
+const AuthLogin = ({
+  authError,
+  title,
+  subtitle,
+  subtext,
+  onSubmit,
+}: loginType) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -28,15 +29,18 @@ const AuthLogin = ({ authError, title, subtitle, subtext, onSubmit }: loginType)
           {title}
         </Typography>
       ) : null}
-  
+
       {subtext}
-  
-      <Box component="form" onSubmit={(event) => {
-            event.preventDefault();
-            if (onSubmit) {
-              onSubmit(email, password);
-            }
-          }}>
+
+      <Box
+        component="form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (onSubmit) {
+            onSubmit(email, password);
+          }
+        }}
+      >
         <Stack mb="10px">
           <Box>
             <Typography
@@ -48,15 +52,15 @@ const AuthLogin = ({ authError, title, subtitle, subtext, onSubmit }: loginType)
             >
               Email
             </Typography>
-            <CustomTextField 
+            <CustomTextField
               required
               variant="outlined"
               fullWidth
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              />
+            />
           </Box>
-          <Box mt="25px">
+          <Box mt="25px" mb="25px">
             <Typography
               variant="subtitle1"
               fontWeight={600}
@@ -72,27 +76,14 @@ const AuthLogin = ({ authError, title, subtitle, subtext, onSubmit }: loginType)
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               variant="outlined"
-              fullWidth/>
+              fullWidth
+            />
           </Box>
-          <Stack
-            justifyContent="flex-end"
-            direction="row"
-            alignItems="center"
-            my={2}
-          >
-            <Typography
-              component={Link}
-              href="#"
-              fontWeight="500"
-              sx={{
-                textDecoration: "none",
-                color: "primary.main",
-              }}
-            >
-              Forgot Password ?
+          {authError ? (
+            <Typography color="error">
+              Login gagal, cek kembali email atau password anda !
             </Typography>
-          </Stack>
-          { authError ? <Typography color="error">Login gagal, cek kembali email atau password anda !</Typography> : null }
+          ) : null}
         </Stack>
         <Box>
           <Button
@@ -109,6 +100,6 @@ const AuthLogin = ({ authError, title, subtitle, subtext, onSubmit }: loginType)
       </Box>
     </>
   );
-}
+};
 
 export default AuthLogin;

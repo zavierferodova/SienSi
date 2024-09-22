@@ -1,16 +1,16 @@
 "use client";
 import { Grid, Box, Card, Typography } from "@mui/material";
 // components
-import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
+import PageContainer from "@/components/container/PageContainer";
+import Logo from "@/components/layout/shared/logo/Logo";
 import AuthLogin from "../auth/AuthLogin";
-import { useAuthController } from "./controller";
+import { useAuthController } from "../../../controller/login-controller";
 
 const Login = () => {
-  const { authError, loginAction } = useAuthController()
+  const { authError, loginAction } = useAuthController();
 
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer title="Login | Siensi" description="Login Page">
       <Box
         sx={{
           position: "relative",
@@ -59,7 +59,7 @@ const Login = () => {
                     color="textSecondary"
                     mb={1}
                   >
-                    Your Social Campaigns
+                    Sistem Presensi Canggih
                   </Typography>
                 }
               />

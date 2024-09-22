@@ -19,8 +19,8 @@ import {
   ConsecutiveSnackbarsController,
   ConsecutiveSnackbarsDispatcher,
   useConsecutiveSnackbars,
-} from "./components/dashboard/ConsecutiveSnackbars";
-import { useDialogQuestion } from "./components/dashboard/DialogQuestion";
+} from "../components/dashboard/ConsecutiveSnackbars";
+import { useDialogQuestion } from "../components/dashboard/DialogQuestion";
 import AttendanceModel from "@/model/attendance";
 
 type GuestController = ReturnType<typeof useGuestController>;
@@ -220,9 +220,8 @@ function useAttendanceController(
   const [paginationPage, setPaginationPage] = useState(1);
   const [paginationSearch, setPaginationSearch] = useState("");
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
-  const [detailAttendance, setDetailAttendance] = useState<AttendanceModel | null>(
-    null
-  );
+  const [detailAttendance, setDetailAttendance] =
+    useState<AttendanceModel | null>(null);
   const dialogQuestion = useDialogQuestion();
 
   const getPaginationData = () => {
@@ -298,11 +297,14 @@ function useAttendanceController(
   const clearAllAttendances = async () => {
     dialogQuestion.handleOpen();
     dialogQuestion.subscribeAccept(async () => {
-      snackbarDispatcher("Menghapus data kehadiran...", "info")
+      snackbarDispatcher("Menghapus data kehadiran...", "info");
       const response = await fetchClearAttendances();
       if (response) {
         performFetchPagination();
-        snackbarDispatcher("Berhasil menghapus semua data kehadiran!", "success");
+        snackbarDispatcher(
+          "Berhasil menghapus semua data kehadiran!",
+          "success"
+        );
       }
     });
   };
@@ -310,12 +312,12 @@ function useAttendanceController(
   const showDetailAttendance = (attendance: AttendanceModel) => {
     setDetailAttendance(attendance);
     setOpenDetailDialog(true);
-  }
+  };
 
   const closeDetailDialog = () => {
     setOpenDetailDialog(false);
     setDetailAttendance(null);
-  }
+  };
 
   useEffect(() => {
     performFetchPagination();
