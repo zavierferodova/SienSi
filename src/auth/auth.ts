@@ -10,7 +10,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 const setSessionDocumentCookie = (cookie: string) => {
   const encryptedCookie = AES.encrypt(
     cookie,
-    process.env["NEXT_PUBLIC_COOKIE_SECRET"]!.trim()
+    process.env["COOKIE_SECRET"]!.trim()
   ).toString();
   Cookie.set("session", encryptedCookie, { expires: 30 });
 };
@@ -39,7 +39,7 @@ const getSessionData = (): AuthModel | null => {
     if (cookie) {
       const decryptedCookie = AES.decrypt(
         cookie,
-        process.env["NEXT_PUBLIC_COOKIE_SECRET"]?.trim() ?? ""
+        process.env["COOKIE_SECRET"]?.trim() ?? ""
       ).toString(CryptoJS.enc.Utf8);
       return JSON.parse(decryptedCookie) as AuthModel;
     }
@@ -57,7 +57,7 @@ const getSessionDataFromRequest = (request: NextRequest): AuthModel | null => {
     if (cookie) {
       const decryptedCookie = AES.decrypt(
         cookie.value,
-        process.env["NEXT_PUBLIC_COOKIE_SECRET"]?.trim() ?? ""
+        process.env["COOKIE_SECRET"]?.trim() ?? ""
       ).toString(CryptoJS.enc.Utf8);
       return JSON.parse(decryptedCookie) as AuthModel;
     }
