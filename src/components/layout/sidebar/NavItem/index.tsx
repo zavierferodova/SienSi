@@ -40,7 +40,7 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
     padding: 0,
     ".MuiButtonBase-root": {
       whiteSpace: "nowrap",
-      marginBottom: "2px",
+      marginBottom: "10px",
       padding: "8px 10px",
       borderRadius: "8px",
       backgroundColor: level > 1 ? "transparent !important" : "inherit",
