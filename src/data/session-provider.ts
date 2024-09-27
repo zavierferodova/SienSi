@@ -1,28 +1,29 @@
 import { fetchWithSession } from "@/auth/auth";
 import { API_BASE_PATH } from "@/constant/constant";
-import GuestModel from "@/model/guest";
+import SessionModel from "@/model/session";
 
-export type GuestPaginationResponse = {
-  guests: GuestModel[];
+export type SessionPaginationResponse = {
+  sessions: SessionModel[];
   total: number;
   page: number;
   limit: number;
 };
+export type SessionResponse = {
+  session: SessionModel;
+};
 
-export const getGuestPagination = async (
+export const getSession = async (
   roomId: string,
-  page = 1,
-  limit = 10,
-  search = ""
-): Promise<GuestPaginationResponse | null> => {
+  sessionId: string
+): Promise<SessionResponse | null> => {
   try {
     const response = await fetchWithSession(
-      `${API_BASE_PATH}/room/${roomId}/guest?page=${page}&limit=${limit}&search=${search}`
+      `${API_BASE_PATH}/room/${roomId}/session/${sessionId}`
     );
 
     if (response.ok) {
       const json = await response.json();
-      return json.data as GuestPaginationResponse;
+      return json.data as SessionResponse;
     }
 
     return null;
@@ -30,19 +31,20 @@ export const getGuestPagination = async (
     return null;
   }
 };
-
-export const getGuestQRKey = async (
-  id: string,
+export const getSessionPagination = async (
+  page = 1,
+  limit = 10,
+  search = "",
   roomId: string
-): Promise<string | null> => {
+): Promise<SessionPaginationResponse | null> => {
   try {
     const response = await fetchWithSession(
-      `${API_BASE_PATH}/room/${roomId}/guest/${id}/qrkey`
+      `${API_BASE_PATH}/room/${roomId}/session?page=${page}&limit=${limit}&search=${search}`
     );
 
     if (response.ok) {
-      const json = await response.blob();
-      return URL.createObjectURL(json);
+      const json = await response.json();
+      return json.data as SessionPaginationResponse;
     }
 
     return null;
@@ -51,19 +53,19 @@ export const getGuestQRKey = async (
   }
 };
 
-export const addGuest = async (
-  guest: GuestModel,
+export const addSession = async (
+  session: SessionModel,
   roomId: string
 ): Promise<boolean> => {
   try {
     const response = await fetchWithSession(
-      `${API_BASE_PATH}/room/${roomId}/guest`,
+      `${API_BASE_PATH}/room/${roomId}/session`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(guest),
+        body: JSON.stringify(session),
       }
     );
 
@@ -73,19 +75,19 @@ export const addGuest = async (
   }
 };
 
-export const updateGuest = async (
-  guest: GuestModel,
+export const updateSession = async (
+  session: SessionModel,
   roomId: string
 ): Promise<boolean> => {
   try {
     const response = await fetchWithSession(
-      `${API_BASE_PATH}/room/${roomId}/guest/${guest.id}`,
+      `${API_BASE_PATH}/room/${roomId}/session/${session.id}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(guest),
+        body: JSON.stringify(session),
       }
     );
 
@@ -95,13 +97,13 @@ export const updateGuest = async (
   }
 };
 
-export const deleteGuest = async (
+export const deleteSession = async (
   id: string,
   roomId: string
 ): Promise<boolean> => {
   try {
     const response = await fetchWithSession(
-      `${API_BASE_PATH}/room/${roomId}/guest/${id}`,
+      `${API_BASE_PATH}/room/${roomId}/session/${id}`,
       {
         method: "DELETE",
       }

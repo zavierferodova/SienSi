@@ -6,7 +6,6 @@ import {
   styled,
   Stack,
   IconButton,
-  Button,
   Breadcrumbs,
 } from "@mui/material";
 import PropTypes from "prop-types";
@@ -17,6 +16,9 @@ import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { getSession } from "@/data/session-provider";
+import { useRoomStore, useSessionStore } from "@/store";
+import { getRoom } from "@/data/room-provider";
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -28,6 +30,29 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
 
   const router = useRouter();
   const params = useParams<{ id: string; sessionId: string }>();
+
+  const roomStore = useRoomStore();
+  const sessionStore = useSessionStore();
+  const getRoomName = () => {
+    if (roomStore.room) {
+      return roomStore.room.name;
+    } else {
+      getRoom(params.id).then((data) => {
+        data && roomStore.setRoom(data.room);
+        return data?.room.name;
+      });
+    }
+  };
+  const getSessionName = () => {
+    if (sessionStore.session) {
+      return sessionStore.session.name;
+    } else {
+      getSession(params.id, params.sessionId).then((data) => {
+        data && sessionStore.setSession(data.session);
+        return data?.session.name;
+      });
+    }
+  };
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -51,7 +76,13 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
     >
       <ToolbarStyled>
         {(params.id || params.sessionId) && (
-          <>
+          <Stack
+            sx={{
+              display: { xs: "none", lg: "flex" },
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             {" "}
             <IconButton onClick={() => router.back()}>
               <ArrowBack />
@@ -59,14 +90,14 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
             <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 2 }}>
               <Link href="/">Dashboard</Link>
               <Link href="/room">Ruangan</Link>
-              <Link href={`/room/${params.id}`}>{params.id}</Link>
+              <Link href={`/room/${params.id}`}>{getRoomName()}</Link>
               {params.sessionId && (
                 <Link href={`/room/${params.id}/${params.sessionId}`}>
-                  {params.sessionId}
+                  {getSessionName()}
                 </Link>
               )}
             </Breadcrumbs>
-          </>
+          </Stack>
         )}
 
         <IconButton

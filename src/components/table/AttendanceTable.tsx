@@ -56,7 +56,6 @@ type AttendanceTableProps = {
   onPageChanged?: (page: number) => void;
   onDownloadExcelClicked?: () => void;
   onViewDetailClicked?: (attendance: AttendanceModel) => void;
-  onClearClicked?: () => void;
 };
 
 const AttendanceTable = ({
@@ -66,7 +65,6 @@ const AttendanceTable = ({
   onPageChanged,
   onDownloadExcelClicked,
   onViewDetailClicked,
-  onClearClicked,
 }: AttendanceTableProps) => {
   const attendances = paginationData?.attendances || [];
   const totalAttendances = paginationData?.total || 0;
@@ -74,13 +72,13 @@ const AttendanceTable = ({
   const limit = paginationData?.limit || 10;
 
   return (
-    <Card sx={{ height: "100%", maxHeight: "500px" }}>
+    <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px" }}>
       <CardContent>
         <div className="flex flex-col md:flex-row">
           <div className="flex mb-4 flex-grow">
             <div className="flex-grow">
               <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
-                Daftar Presensi
+                Daftar Kehadiran
               </Typography>
               <Typography variant="body1" color="gray">
                 Berikut tamu yang telah melakukan presensi
@@ -118,7 +116,7 @@ const AttendanceTable = ({
           </div>
         </div>
         <Box>
-          <TableContainer sx={{ maxHeight: 350, maxWidth: "760px" }}>
+          <TableContainer sx={{ maxHeight: 350 }}>
             <Table
               stickyHeader
               aria-label="simple table"
@@ -288,12 +286,9 @@ const AttendanceTable = ({
           <Stack
             sx={{ marginTop: 5 }}
             direction="row"
-            justifyContent="space-between"
+            justifyContent="end"
             alignItems="center"
           >
-            <Button variant="outlined" onClick={onClearClicked} sx={{ marginRight: 2 }}>
-              Clear
-            </Button>
             <TablePagination
               component="div"
               count={totalAttendances}

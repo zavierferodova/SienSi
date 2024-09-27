@@ -1,65 +1,32 @@
 import {
-  attendanceCheck,
-  AttendancePaginationResponse,
-  getAttendancePagination,
-  getExcelAttendance,
-} from "@/data/attendance-provider";
-import {
-  addGuest,
-  deleteGuest,
-  getGuestPagination,
-  getGuestQRKey,
-  GuestPaginationResponse,
-  updateGuest,
-} from "@/data/guest-provider";
-import GuestModel from "@/model/guest";
+  addSession,
+  deleteSession,
+  getSessionPagination,
+  SessionPaginationResponse,
+  updateSession,
+} from "@/data/session-provider";
 import { useCallback, useEffect, useState } from "react";
-import {
-  ConsecutiveSnackbarsController,
-  ConsecutiveSnackbarsDispatcher,
-  useConsecutiveSnackbars,
-} from "../components/dashboard/ConsecutiveSnackbars";
+import { ConsecutiveSnackbarsDispatcher } from "../components/dashboard/ConsecutiveSnackbars";
 import { useDialogQuestion } from "../components/dialog/DialogQuestion";
-import { useAttendanceController } from "./attendance-controller";
+import SessionModel from "@/model/session";
 
-type GuestController = ReturnType<typeof useGuestController>;
-
-type AttendanceController = ReturnType<typeof useAttendanceController>;
-
-export const useDashboardController = () =>
-  // : [
-  //   ConsecutiveSnackbarsController,
-  // GuestController,
-  // AttendanceController
-  // ]
-  {
-    const [openSnackbar, snackbarController] = useConsecutiveSnackbars();
-    // const attendanceController = useAttendanceController(openSnackbar);
-    // const guestController = useGuestController(
-    //   openSnackbar,
-    //   attendanceController.refreshPagination
-    // );
-    // return [snackbarController, guestController, attendanceController];
-    return [];
-  };
-
-export function useGuestController(
-  roomId: string,
+export function useSessionController(
   snackbarDispatcher: ConsecutiveSnackbarsDispatcher,
   refreshAttendances: () => void
 ) {
-  const [openQRDialog, setOpenQRDialog] = useState(false);
   const [openPaginationDialog, setOpenPaginationDialog] = useState(false);
-  const [qrDialogLink, setQRDialogLink] = useState<string>("");
   const [paginationDialogMode, setPaginationDialogMode] = useState<
     "add" | "edit"
   >("add");
   const [paginationData, setPaginationData] =
-    useState<GuestPaginationResponse | null>(null);
-  const [editingGuest, setEditingGuest] = useState<GuestModel | null>(null);
+    useState<SessionPaginationResponse | null>(null);
+  const [editingSession, setEditingSession] = useState<SessionModel | null>(
+    null
+  );
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [paginationPage, setPaginationPage] = useState(1);
   const [paginationSearch, setPaginationSearch] = useState("");
+  const [roomId, setRoomId] = useState("");
   const dialogQuestion = useDialogQuestion();
 
   const handleOpenDialogAdd = () => {
@@ -67,20 +34,16 @@ export function useGuestController(
     setOpenPaginationDialog(true);
   };
 
-  const handleOpenDialogEdit = (guest: GuestModel) => {
+  const handleOpenDialogEdit = (session: SessionModel) => {
     setPaginationDialogMode("edit");
     setOpenPaginationDialog(true);
-    setEditingGuest(guest);
+    setEditingSession(session);
   };
 
   const handleCloseDialog = () => {
     setPaginationDialogMode("add");
     setOpenPaginationDialog(false);
-    setEditingGuest(null);
-  };
-
-  const handleOpenQRDialog = () => {
-    setOpenQRDialog(!openQRDialog);
+    setEditingSession(null);
   };
 
   const getPaginationData = () => {
@@ -90,7 +53,7 @@ export function useGuestController(
         page: paginationData.page,
         limit: paginationData.limit,
         total: paginationData.total,
-        guests: paginationData.guests,
+        sessions: paginationData.sessions,
       };
     }
 
@@ -98,41 +61,42 @@ export function useGuestController(
   };
 
   const fetchPaginationData = async (
+    roomId: string,
     page?: number,
     limit?: number,
     search?: string
   ) => {
-    const response = await getGuestPagination(roomId, page, limit, search);
+    const response = await getSessionPagination(page, limit, search, roomId);
     setPaginationData(response);
   };
 
   const performFetchPagination = useCallback(() => {
-    fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
+    fetchPaginationData(
+      roomId,
+      paginationPage,
+      paginationLimit,
+      paginationSearch
+    );
   }, [paginationPage, paginationLimit, paginationSearch]);
 
-  const fetchAddGuest = async (guest: GuestModel) => {
-    const response = await addGuest(guest, roomId);
+  const fetchAddSession = async (session: SessionModel) => {
+    const response = await addSession(session, roomId);
     return response;
   };
 
-  const fetchEditGuest = async (guest: GuestModel) => {
-    const response = await updateGuest(guest, roomId);
+  const fetchEditSession = async (session: SessionModel) => {
+    const response = await updateSession(session, roomId);
     return response;
   };
 
-  const fetchRemoveGuest = async (id: string) => {
-    const response = await deleteGuest(id, roomId);
+  const fetchRemoveSession = async (id: string) => {
+    const response = await deleteSession(id, roomId);
     return response;
   };
 
-  const fetchGuestQRImage = async (id: string) => {
-    const response = await getGuestQRKey(id, roomId);
-    return response;
-  };
-
-  const saveGuest = async (guest: GuestModel) => {
+  const saveSession = async (session: SessionModel) => {
     snackbarDispatcher("Menambahkan tamu...", "info");
-    const success = await fetchAddGuest(guest);
+    const success = await fetchAddSession(session);
     if (success) {
       performFetchPagination();
       handleCloseDialog();
@@ -143,9 +107,9 @@ export function useGuestController(
     }
   };
 
-  const editGuest = async (guest: GuestModel) => {
+  const editSession = async (session: SessionModel) => {
     snackbarDispatcher("Mengedit tamu...", "info");
-    const success = await fetchEditGuest(guest);
+    const success = await fetchEditSession(session);
     if (success) {
       performFetchPagination();
       handleCloseDialog();
@@ -156,11 +120,11 @@ export function useGuestController(
     }
   };
 
-  const removeGuest = async (id: string) => {
+  const removeSession = async (id: string) => {
     dialogQuestion.handleOpen();
     dialogQuestion.subscribeAccept(async () => {
       snackbarDispatcher("Menghapus tamu...", "info");
-      const success = await fetchRemoveGuest(id);
+      const success = await fetchRemoveSession(id);
       if (success) {
         performFetchPagination();
         snackbarDispatcher("Berhasil menghapus tamu!", "success");
@@ -171,26 +135,12 @@ export function useGuestController(
     });
   };
 
-  const viewGuestQRImage = async (id: string) => {
-    const imageLink = await fetchGuestQRImage(id);
-    if (imageLink) {
-      handleOpenQRDialog();
-      setQRDialogLink(imageLink);
-    } else {
-      setQRDialogLink("");
-    }
-  };
-
   useEffect(() => {
     performFetchPagination();
   }, [performFetchPagination]);
 
   return {
     paginationResponseData: paginationData,
-    openQRDialog,
-    qrDialogLink,
-    viewGuestQRImage,
-    closeQRDialog: handleOpenQRDialog,
     openDeleteDialog: dialogQuestion.open,
     closeDeleteDialog: dialogQuestion.handleClose,
     acceptDeleteDialog: dialogQuestion.handleAccept,
@@ -199,13 +149,13 @@ export function useGuestController(
     handleOpenDialogAdd,
     handleOpenDialogEdit,
     handleCloseDialog,
-    editingGuest,
-    saveGuest,
-    editGuest,
-    removeGuest,
+    saveSession,
+    editSession,
+    removeSession,
     getPaginationData,
     setPaginationPage,
     setPaginationLimit,
     setPaginationSearch,
+    setRoomId,
   };
 }

@@ -16,7 +16,7 @@ import { removeSessionFromClient } from "@/auth/auth";
 import { useRouter } from "next/navigation";
 
 const Profile = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [anchorEl2, setAnchorEl2] = useState(null);
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
@@ -78,7 +78,7 @@ const Profile = () => {
             color="primary"
             fullWidth
             onClick={() => {
-              removeSessionFromClient(router)
+              removeSessionFromClient(router);
             }}
           >
             Logout
