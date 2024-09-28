@@ -11,8 +11,8 @@ import { useDialogQuestion } from "../components/dialog/DialogQuestion";
 import SessionModel from "@/model/session";
 
 export function useSessionController(
-  snackbarDispatcher: ConsecutiveSnackbarsDispatcher,
-  refreshAttendances: () => void
+  roomId: string,
+  snackbarDispatcher: ConsecutiveSnackbarsDispatcher
 ) {
   const [openPaginationDialog, setOpenPaginationDialog] = useState(false);
   const [paginationDialogMode, setPaginationDialogMode] = useState<
@@ -26,7 +26,6 @@ export function useSessionController(
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [paginationPage, setPaginationPage] = useState(1);
   const [paginationSearch, setPaginationSearch] = useState("");
-  const [roomId, setRoomId] = useState("");
   const dialogQuestion = useDialogQuestion();
 
   const handleOpenDialogAdd = () => {
@@ -61,7 +60,6 @@ export function useSessionController(
   };
 
   const fetchPaginationData = async (
-    roomId: string,
     page?: number,
     limit?: number,
     search?: string
@@ -71,12 +69,7 @@ export function useSessionController(
   };
 
   const performFetchPagination = useCallback(() => {
-    fetchPaginationData(
-      roomId,
-      paginationPage,
-      paginationLimit,
-      paginationSearch
-    );
+    fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
   }, [paginationPage, paginationLimit, paginationSearch]);
 
   const fetchAddSession = async (session: SessionModel) => {
@@ -101,7 +94,6 @@ export function useSessionController(
       performFetchPagination();
       handleCloseDialog();
       snackbarDispatcher("Berhasil menambahkan tamu!", "success");
-      refreshAttendances();
     } else {
       snackbarDispatcher("Gagal menambahkan tamu!", "error");
     }
@@ -114,7 +106,6 @@ export function useSessionController(
       performFetchPagination();
       handleCloseDialog();
       snackbarDispatcher("Berhasil mengedit tamu!", "success");
-      refreshAttendances();
     } else {
       snackbarDispatcher("Gagal mengedit tamu!", "error");
     }
@@ -128,7 +119,6 @@ export function useSessionController(
       if (success) {
         performFetchPagination();
         snackbarDispatcher("Berhasil menghapus tamu!", "success");
-        refreshAttendances();
       } else {
         snackbarDispatcher("Gagal menghapus tamu!", "error");
       }
@@ -149,6 +139,7 @@ export function useSessionController(
     handleOpenDialogAdd,
     handleOpenDialogEdit,
     handleCloseDialog,
+    editingSession,
     saveSession,
     editSession,
     removeSession,
@@ -156,6 +147,5 @@ export function useSessionController(
     setPaginationPage,
     setPaginationLimit,
     setPaginationSearch,
-    setRoomId,
   };
 }

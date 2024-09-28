@@ -123,8 +123,10 @@ const DialogCustomizeGuest = ({
           email: formData.get("email")?.toString() ?? "",
           phone: formData.get("phone")?.toString() ?? "",
           id: guest?.id ?? "",
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          roomId: guest?.roomId ?? "",
+          photo: guest?.photo ?? "",
         } as GuestModel);
       }
     } catch (error) {

@@ -81,7 +81,7 @@ const GuestTable = ({
   const limit = paginationData?.limit || 10;
 
   return (
-    <Card sx={{ height: "100%", maxHeight: "600px" }}>
+    <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px" }}>
       <CardContent>
         <div className="flex flex-col md:flex-row">
           <div className="flex mb-4 flex-grow">
@@ -126,7 +126,7 @@ const GuestTable = ({
           </div>
         </div>
         <Box>
-          <TableContainer sx={{ maxHeight: 350, maxWidth: "760px" }}>
+          <TableContainer sx={{ maxHeight: 350 }}>
             <Table
               stickyHeader
               aria-label="simple table"

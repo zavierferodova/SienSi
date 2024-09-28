@@ -18,19 +18,21 @@ export type DialogQuestion = {
 
 export const useDialogQuestion = () => {
   const [open, setOpen] = useState(false);
-  const [acceptObservers, setAcceptObservers] = useState<Set<() => void>>(new Set());
+  const [acceptObservers, setAcceptObservers] = useState<Set<() => void>>(
+    new Set()
+  );
 
   const clearObservers = () => {
     setAcceptObservers(new Set());
-  }
+  };
 
   const subscribeAccept = (callback: () => void) => {
     setAcceptObservers((prev) => {
       const next = new Set(prev);
       next.add(callback);
       return next;
-    })
-  }
+    });
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -40,17 +42,17 @@ export const useDialogQuestion = () => {
     setOpen(false);
     clearObservers();
   };
-  
+
   const handleAccept = () => {
     acceptObservers.forEach((callback) => callback());
     clearObservers();
     handleClose();
-  }
+  };
 
   return { open, handleOpen, handleClose, handleAccept, subscribeAccept };
 };
 
-const DialogDeleteGuest = ({
+const DialogDelete = ({
   open,
   title,
   message,
@@ -61,9 +63,7 @@ const DialogDeleteGuest = ({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          {message}
-        </DialogContentText>
+        <DialogContentText>{message}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
@@ -77,4 +77,4 @@ const DialogDeleteGuest = ({
   );
 };
 
-export default DialogDeleteGuest;
+export default DialogDelete;

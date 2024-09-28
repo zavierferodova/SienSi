@@ -1,10 +1,4 @@
 import {
-  attendanceCheck,
-  AttendancePaginationResponse,
-  getAttendancePagination,
-  getExcelAttendance,
-} from "@/data/attendance-provider";
-import {
   addGuest,
   deleteGuest,
   getGuestPagination,
@@ -14,39 +8,12 @@ import {
 } from "@/data/guest-provider";
 import GuestModel from "@/model/guest";
 import { useCallback, useEffect, useState } from "react";
-import {
-  ConsecutiveSnackbarsController,
-  ConsecutiveSnackbarsDispatcher,
-  useConsecutiveSnackbars,
-} from "../components/dashboard/ConsecutiveSnackbars";
+import { ConsecutiveSnackbarsDispatcher } from "../components/dashboard/ConsecutiveSnackbars";
 import { useDialogQuestion } from "../components/dialog/DialogQuestion";
-import { useAttendanceController } from "./attendance-controller";
-
-type GuestController = ReturnType<typeof useGuestController>;
-
-type AttendanceController = ReturnType<typeof useAttendanceController>;
-
-export const useDashboardController = () =>
-  // : [
-  //   ConsecutiveSnackbarsController,
-  // GuestController,
-  // AttendanceController
-  // ]
-  {
-    const [openSnackbar, snackbarController] = useConsecutiveSnackbars();
-    // const attendanceController = useAttendanceController(openSnackbar);
-    // const guestController = useGuestController(
-    //   openSnackbar,
-    //   attendanceController.refreshPagination
-    // );
-    // return [snackbarController, guestController, attendanceController];
-    return [];
-  };
 
 export function useGuestController(
   roomId: string,
-  snackbarDispatcher: ConsecutiveSnackbarsDispatcher,
-  refreshAttendances: () => void
+  snackbarDispatcher: ConsecutiveSnackbarsDispatcher
 ) {
   const [openQRDialog, setOpenQRDialog] = useState(false);
   const [openPaginationDialog, setOpenPaginationDialog] = useState(false);
@@ -137,7 +104,6 @@ export function useGuestController(
       performFetchPagination();
       handleCloseDialog();
       snackbarDispatcher("Berhasil menambahkan tamu!", "success");
-      refreshAttendances();
     } else {
       snackbarDispatcher("Gagal menambahkan tamu!", "error");
     }
@@ -150,7 +116,6 @@ export function useGuestController(
       performFetchPagination();
       handleCloseDialog();
       snackbarDispatcher("Berhasil mengedit tamu!", "success");
-      refreshAttendances();
     } else {
       snackbarDispatcher("Gagal mengedit tamu!", "error");
     }
@@ -164,7 +129,6 @@ export function useGuestController(
       if (success) {
         performFetchPagination();
         snackbarDispatcher("Berhasil menghapus tamu!", "success");
-        refreshAttendances();
       } else {
         snackbarDispatcher("Gagal menghapus tamu!", "error");
       }
