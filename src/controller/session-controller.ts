@@ -9,6 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import { ConsecutiveSnackbarsDispatcher } from "../components/dashboard/ConsecutiveSnackbars";
 import { useDialogQuestion } from "../components/dialog/DialogQuestion";
 import SessionModel from "@/model/session";
+import { useRouter } from "next/navigation";
+import { getExcelAttendance } from "@/data/attendance-provider";
 
 export function useSessionController(
   roomId: string,
@@ -27,6 +29,7 @@ export function useSessionController(
   const [paginationPage, setPaginationPage] = useState(1);
   const [paginationSearch, setPaginationSearch] = useState("");
   const dialogQuestion = useDialogQuestion();
+  const router = useRouter();
 
   const handleOpenDialogAdd = () => {
     setPaginationDialogMode("add");
@@ -110,6 +113,10 @@ export function useSessionController(
       snackbarDispatcher("Gagal mengedit tamu!", "error");
     }
   };
+  const fetchExcelAttendance = async (sessionId: string) => {
+    const response = await getExcelAttendance(roomId, sessionId);
+    return response;
+  };
 
   const removeSession = async (id: string) => {
     dialogQuestion.handleOpen();
@@ -123,6 +130,19 @@ export function useSessionController(
         snackbarDispatcher("Gagal menghapus tamu!", "error");
       }
     });
+  };
+  const viewSessionDetail = async (id: string) => {
+    return router.push(`/room/${roomId}/${id}`);
+  };
+  const downloadExcelAttendances = async (id: string) => {
+    const blob = await fetchExcelAttendance(id);
+    if (blob) {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "attendance.xlsx";
+      a.click();
+    }
   };
 
   useEffect(() => {
@@ -143,6 +163,8 @@ export function useSessionController(
     saveSession,
     editSession,
     removeSession,
+    viewSessionDetail,
+    downloadExcelAttendances,
     getPaginationData,
     setPaginationPage,
     setPaginationLimit,

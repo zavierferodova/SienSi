@@ -25,6 +25,7 @@ import {
   IconPlus,
   IconSearch,
   IconEye,
+  IconDownload,
 } from "@tabler/icons-react";
 import CustomTextField from "../forms/theme-elements/CustomTextField";
 import { styled } from "@mui/material/styles";
@@ -59,10 +60,11 @@ type SessionTableProps = {
   onAddClicked?: () => void;
   onEditClicked?: (session: SessionModel) => void;
   onDeleteClicked?: (id: string) => void;
-  onQRImageClicked?: (id: string) => void;
   onSearching?: (query: string) => void;
   onRowsPerPageChange?: (limit: number) => void;
   onPageChanged?: (page: number) => void;
+  onViewDetailClicked?: (id: string) => void;
+  onDownloadExcelClicked?: (id: string) => void;
 };
 
 const SessionTable = ({
@@ -73,6 +75,8 @@ const SessionTable = ({
   onSearching,
   onRowsPerPageChange,
   onPageChanged,
+  onViewDetailClicked,
+  onDownloadExcelClicked,
 }: SessionTableProps) => {
   const sessions = paginationData?.sessions || [];
   const totalSessions = paginationData?.total || 0;
@@ -165,8 +169,22 @@ const SessionTable = ({
                         {session.name}
                       </Typography>
                     </TableCell>
-                    <TableCell align="right">
-                      <Stack direction="row" justifyContent={"end"} spacing={1}>
+                    <TableCell align="center">
+                      <Stack
+                        direction="row"
+                        justifyContent={"center"}
+                        spacing={1}
+                      >
+                        <IconButton
+                          aria-label="view"
+                          onClick={() => {
+                            if (onViewDetailClicked) {
+                              onViewDetailClicked(session.id);
+                            }
+                          }}
+                        >
+                          <IconEye size={20} />
+                        </IconButton>
                         <IconButton
                           aria-label="edit"
                           onClick={() => {
@@ -186,6 +204,16 @@ const SessionTable = ({
                           }}
                         >
                           <IconTrash size={20} />
+                        </IconButton>
+                        <IconButton
+                          aria-label="donwload"
+                          onClick={() => {
+                            if (onDownloadExcelClicked) {
+                              onDownloadExcelClicked(session.id);
+                            }
+                          }}
+                        >
+                          <IconDownload size={20} />
                         </IconButton>
                       </Stack>
                     </TableCell>

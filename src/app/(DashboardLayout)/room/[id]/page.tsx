@@ -52,7 +52,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
   }, []);
   return (
     <>
-      <div className="grid md:grid-cols-3 items-start mb-10 gap-6">
+      <div className="grid md:grid-cols-3 items-start mb-10 gap-6 max-w-[900px]">
         <Card
           sx={{
             height: "100%",
@@ -83,19 +83,20 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
               sessionController.setPaginationSearch(query)
             }
             onPageChanged={(page) => sessionController.setPaginationPage(page)}
-            onDeleteClicked={(session) =>
-              sessionController.removeSession(session)
-            }
             onRowsPerPageChange={(limit) =>
               sessionController.setPaginationLimit(limit)
+            }
+            onViewDetailClicked={(id) =>
+              sessionController.viewSessionDetail(id)
+            }
+            onDeleteClicked={(id) => sessionController.removeSession(id)}
+            onDownloadExcelClicked={(id) =>
+              sessionController.downloadExcelAttendances(id)
             }
           />
         </div>
       </div>
       <PageContainer title="Siensi" description="presensi">
-        <Button href="/room/b845c386-cc5f-46e1-afd8-be3a579f6357/f4718117-87b3-451e-8b5f-3585f329c894">
-          Sesi 1
-        </Button>
         <GuestTable
           paginationData={guestController.getPaginationData()}
           onAddClicked={guestController.handleOpenDialogAdd}
