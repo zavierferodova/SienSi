@@ -4,88 +4,66 @@ import { useTheme } from "@mui/material";
 import { Card } from "@mui/material";
 import { IconCamera } from "@tabler/icons-react";
 import QrScanner from "qr-scanner";
-import { useEffect, useState } from "react";
-import Webcam from "react-webcam";
+import { useEffect, useRef, useState } from "react";
+import { ConsecutiveSnackbarsDispatcher } from "./ConsecutiveSnackbars";
 
 type CameraCardProps = {
-  onQRScanned?: (data: string) => void;
+  onQRScanned?: (data: number) => void;
+  snackbarDispatcher: ConsecutiveSnackbarsDispatcher;
 };
 
-const CameraCard = ({ onQRScanned }: CameraCardProps) => {
+const CameraCard = ({ onQRScanned, snackbarDispatcher }: CameraCardProps) => {
   const theme = useTheme();
-  const [cameraId, setCameraId] = useState<string | undefined>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [webcam, setWebcam] = useState<any | null>(null);
-  const [scanner, setScanner] = useState<QrScanner | null>(null);
+  const videoEl = useRef<HTMLVideoElement>(null);
+  const qrBoxEl = useRef<HTMLDivElement>(null);
+  const scanner = useRef<QrScanner>();
   const [cameraOpen, setCameraOpen] = useState(false);
   const mainColor = theme.palette.primary.main;
 
-  const setMainCamera = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameraDevices = devices.find(
-      (device) => device.kind === "videoinput"
-    );
-
-    if (cameraDevices) {
-      setCameraId(cameraDevices.deviceId);
-    }
-  };
-
-  const stopScanner = () => {
-    if (scanner) {
-      scanner.destroy();
-      setScanner(null);
-    }
-  };
-
-  const turnOffWebcam = () => {
-    if (webcam) {
-      webcam?.video?.srcObject
-        ?.getTracks()
-        .forEach((track: MediaStreamTrack) => {
-          track.stop();
-        });
-    }
-  };
-
   const openCloseCamera = async () => {
     if (cameraOpen) {
-      turnOffWebcam();
-      stopScanner();
+      scanner.current?.stop();
+    } else {
+      scanner.current?.start().catch((err) => {
+        if (err) setCameraOpen(false);
+      });
     }
-   
+
     setCameraOpen(!cameraOpen);
   };
 
-  const initQRScanner = () => {
-    if (webcam) {
-      if (webcam.video) {
-        const qrScanner = new QrScanner(
-          webcam.video,
-          (result: QrScanner.ScanResult) => {
-            if (onQRScanned) {
-              onQRScanned(result.data);
-            }
-          },
-          { maxScansPerSecond: 2 }
-        );
-
-        qrScanner.start();
-      }
+  const onScanSuccess = (result: QrScanner.ScanResult) => {
+    if (onQRScanned) {
+      onQRScanned(parseInt(result.data));
+      snackbarDispatcher("Berhasil menambahkan tamu!", "success");
     }
-  };
-
-  const initCamera = async () => {
-    await setMainCamera();
   };
 
   useEffect(() => {
-    if (cameraOpen) {
-      initCamera();
-      initQRScanner();
-    }
-  }, [cameraOpen, onQRScanned, webcam, cameraId]);
+    if (videoEl?.current && !scanner.current) {
+      scanner.current = new QrScanner(videoEl?.current, onScanSuccess, {
+        maxScansPerSecond: 2,
+        preferredCamera: "environment",
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
+        overlay: qrBoxEl?.current || undefined,
+      });
 
+      scanner?.current
+        ?.start()
+        .then(() => setCameraOpen(true))
+        .catch((err) => {
+          if (err) setCameraOpen(false);
+        });
+    }
+
+    return () => {
+      if (!videoEl?.current) {
+        scanner?.current?.stop();
+        scanner.current = undefined;
+      }
+    };
+  }, [cameraOpen]);
   return (
     <Card
       sx={{
@@ -102,23 +80,15 @@ const CameraCard = ({ onQRScanned }: CameraCardProps) => {
       onClick={openCloseCamera}
     >
       {cameraOpen ? (
-        <Webcam
-          ref={(ref) => {
-            setWebcam(ref);
-          }}
-          videoConstraints={{
-            deviceId: cameraId,
-          }}
-          style={{
-            width: "100%",
-            height: "100%",
-            background: "black",
-            objectFit: "cover",
-          }}
-          audio={false}
-          screenshotFormat="image/jpeg"
-          mirrored={true}
-        />
+        <div className="w-full h-full">
+          <video ref={videoEl}></video>
+          <div
+            ref={qrBoxEl}
+            className={`
+             
+             border-2 border-green-500 w-full`}
+          ></div>
+        </div>
       ) : (
         <IconCamera style={{ color: "white" }} size={56} />
       )}

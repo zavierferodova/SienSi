@@ -12,7 +12,7 @@ export type AttendancePaginationResponse = {
 };
 
 export const attendanceCheck = async (
-  guestKey: string,
+  guestKey: number,
   roomId: string,
   sessionId: string
 ): Promise<AttendanceResponse> => {

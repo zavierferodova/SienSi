@@ -71,6 +71,7 @@ export default function SessionPage({
               onQRScanned={(qrCode) => {
                 attendanceController.checkAttendance(qrCode);
               }}
+              snackbarDispatcher={openSnackbar}
             />
           </div>
         </div>

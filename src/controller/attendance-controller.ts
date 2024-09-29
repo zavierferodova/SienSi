@@ -57,8 +57,8 @@ export function useAttendanceController(
     fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
   }, [paginationPage, paginationLimit, paginationSearch]);
 
-  const fetchAttendanceCheck = async (sessionKey: string) => {
-    const response = await attendanceCheck(sessionKey, roomId, sessionId);
+  const fetchAttendanceCheck = async (guestKey: number) => {
+    const response = await attendanceCheck(guestKey, roomId, sessionId);
     return response;
   };
 
@@ -67,9 +67,9 @@ export function useAttendanceController(
     return response;
   };
 
-  const checkAttendance = async (sessionKey: string) => {
+  const checkAttendance = async (guestKey: number) => {
     snackbarDispatcher("Melakukan presensi...", "info");
-    const response = await fetchAttendanceCheck(sessionKey);
+    const response = await fetchAttendanceCheck(guestKey);
     if (response === "success") {
       snackbarDispatcher("Berhasil melakukan presensi!", "success");
       performFetchPagination();
