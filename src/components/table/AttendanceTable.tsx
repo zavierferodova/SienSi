@@ -29,7 +29,8 @@ const RoundTextField = styled((props: TextFieldProps) => (
   <CustomTextField {...props} />
 ))(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
-    borderRadius: "15px",
+    borderRadius: "8px",
+    height: "40px",
   },
   "& .MuiOutlinedInput-input::-webkit-input-placeholder": {
     color: theme.palette.text.secondary,
@@ -74,8 +75,8 @@ const AttendanceTable = ({
   return (
     <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px" }}>
       <CardContent>
-        <div className="flex flex-col md:flex-row">
-          <div className="flex mb-4 flex-grow">
+        <div className="flex flex-col md:flex-row md:items-center items-start">
+          <div className="flex mb-4 md:mb-0 flex-grow mr-2 justify-between w-full">
             <div className="flex-grow">
               <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
                 Daftar Kehadiran
@@ -88,18 +89,18 @@ const AttendanceTable = ({
               <div>
                 <Button
                   variant="contained"
-                  size="large"
-                  sx={{ clipPath: "circle()" }}
+                  size="small"
                   onClick={onDownloadExcelClicked}
                 >
-                  <IconDownload size={20} />
+                  <IconDownload size={20} /> Download
                 </Button>
               </div>
             </div>
           </div>
-          <div>
+          <div className="flex space-x-4 w-full">
             <RoundTextField
               placeholder="Cari presensi"
+              className="flex-grow max-w-96"
               onChange={(e) => {
                 if (onSearching) {
                   onSearching(e.target.value);
@@ -108,7 +109,7 @@ const AttendanceTable = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <IconSearch />
+                    <IconSearch size={18} />
                   </InputAdornment>
                 ),
               }}

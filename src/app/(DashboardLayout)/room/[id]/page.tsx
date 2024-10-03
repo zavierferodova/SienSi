@@ -66,9 +66,6 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
             <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
               {roomData?.name}
             </Typography>
-            <IconButton aria-label="share">
-              <IconShare size={20} />
-            </IconButton>
           </div>
           <Typography variant="body2" color="gray">
             {roomData?.description}

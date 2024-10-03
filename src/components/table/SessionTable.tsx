@@ -35,7 +35,8 @@ const RoundTextField = styled((props: TextFieldProps) => (
   <CustomTextField {...props} />
 ))(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
-    borderRadius: "15px",
+    borderRadius: "8px",
+    height: "40px",
   },
   "& .MuiOutlinedInput-input::-webkit-input-placeholder": {
     color: theme.palette.text.secondary,
@@ -86,30 +87,25 @@ const SessionTable = ({
   return (
     <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px" }}>
       <CardContent>
-        <div className="flex flex-col md:flex-row">
-          <div className="flex mb-4 flex-grow">
+        <div className="flex flex-col md:flex-row md:items-center items-start">
+          <div className="flex mb-4 md:mb-0 flex-grow mr-2 justify-between w-full">
             <div className="flex-grow">
               <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
                 Daftar Sesi
               </Typography>
             </div>
-            <div className="flex items-center">
+            <div>
               <div>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{ clipPath: "circle()" }}
-                  onClick={onAddClicked}
-                >
-                  <IconPlus size={20} />
+                <Button variant="contained" size="small" onClick={onAddClicked}>
+                  <IconPlus size={18} /> Tambah
                 </Button>
               </div>
             </div>
           </div>
-          <div>
+          <div className="flex space-x-4 w-full">
             <RoundTextField
               placeholder="Cari sesi"
-              sx={{ width: "100%" }}
+              className="flex-grow max-w-96"
               onChange={(e) => {
                 if (onSearching) {
                   onSearching(e.target.value);
@@ -118,7 +114,7 @@ const SessionTable = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <IconSearch />
+                    <IconSearch size={18} />
                   </InputAdornment>
                 ),
               }}
@@ -140,6 +136,16 @@ const SessionTable = ({
                   <TableCell align="left">
                     <Typography variant="subtitle2" fontWeight={600}>
                       Nama
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="subtitle2" fontWeight={600}>
+                      Lihat
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="subtitle2" fontWeight={600}>
+                      Download
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
@@ -183,8 +189,35 @@ const SessionTable = ({
                             }
                           }}
                         >
+                          {" "}
                           <IconEye size={20} />
                         </IconButton>
+                      </Stack>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Stack
+                        direction="row"
+                        justifyContent={"center"}
+                        spacing={1}
+                      >
+                        <IconButton
+                          aria-label="donwload"
+                          onClick={() => {
+                            if (onDownloadExcelClicked) {
+                              onDownloadExcelClicked(session.id);
+                            }
+                          }}
+                        >
+                          <IconDownload size={20} />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Stack
+                        direction="row"
+                        justifyContent={"center"}
+                        spacing={1}
+                      >
                         <IconButton
                           aria-label="edit"
                           onClick={() => {
@@ -204,16 +237,6 @@ const SessionTable = ({
                           }}
                         >
                           <IconTrash size={20} />
-                        </IconButton>
-                        <IconButton
-                          aria-label="donwload"
-                          onClick={() => {
-                            if (onDownloadExcelClicked) {
-                              onDownloadExcelClicked(session.id);
-                            }
-                          }}
-                        >
-                          <IconDownload size={20} />
                         </IconButton>
                       </Stack>
                     </TableCell>
