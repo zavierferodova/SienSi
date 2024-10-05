@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Box,
   AppBar,
   Toolbar,
   styled,
@@ -10,7 +9,6 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 // components
-import Profile from "./Profile";
 import { IconMenu } from "@tabler/icons-react";
 import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
@@ -113,11 +111,6 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
         >
           <IconMenu width="20" height="20" />
         </IconButton>
-
-        <Box flexGrow={1} />
-        <Stack spacing={1} direction="row" alignItems="center">
-          <Profile />
-        </Stack>
       </ToolbarStyled>
     </AppBarStyled>
   );
