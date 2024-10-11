@@ -4,6 +4,7 @@ import {
   getGuestPagination,
   getGuestQRKey,
   GuestPaginationResponse,
+  sendAllQrCode,
   updateGuest,
 } from "@/data/guest-provider";
 import GuestModel from "@/model/guest";
@@ -32,6 +33,12 @@ export function useGuestController(
   const handleOpenDialogAdd = () => {
     setPaginationDialogMode("add");
     setOpenPaginationDialog(true);
+  };
+  const handleSendAllQrCode = async () => {
+    const response = await sendAllQrCode(roomId);
+    if (response) {
+      snackbarDispatcher("Berhasil megirim email QR code!", "success");
+    }
   };
 
   const handleOpenDialogEdit = (guest: GuestModel) => {
@@ -161,6 +168,7 @@ export function useGuestController(
     openPaginationDialog,
     paginationDialogMode,
     handleOpenDialogAdd,
+    handleSendAllQrCode,
     handleOpenDialogEdit,
     handleCloseDialog,
     editingGuest,

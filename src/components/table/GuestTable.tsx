@@ -17,6 +17,7 @@ import {
   TablePagination,
   Avatar,
   Chip,
+  Tooltip,
 } from "@mui/material";
 
 import {
@@ -61,6 +62,7 @@ type GuestTableProps = {
     limit: number;
   };
   onAddClicked?: () => void;
+  onSendAllQrCode?: () => void;
   onEditClicked?: (guest: GuestModel) => void;
   onDeleteClicked?: (id: string) => void;
   onQRImageClicked?: (id: string) => void;
@@ -72,6 +74,7 @@ type GuestTableProps = {
 const GuestTable = ({
   paginationData,
   onAddClicked,
+  onSendAllQrCode,
   onEditClicked,
   onDeleteClicked,
   onQRImageClicked,
@@ -286,14 +289,16 @@ const GuestTable = ({
               ),
             }}
           />
-          <Button
-            variant="contained"
-            size="small"
-            className="h-fit my-auto"
-            onClick={onAddClicked}
-          >
-            Kirim <IconSend size={18} />
-          </Button>
+          <Tooltip title="Kirim kode QR ke tamu">
+            <Button
+              variant="contained"
+              size="small"
+              className="h-fit my-auto"
+              onClick={onSendAllQrCode}
+            >
+              Kirim <IconSend size={18} />
+            </Button>
+          </Tooltip>
         </div>
         <Box>
           <Box sx={{ height: 350, width: "100%" }}>

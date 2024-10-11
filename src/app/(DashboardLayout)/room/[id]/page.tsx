@@ -13,8 +13,7 @@ import { useGuestController } from "@/controller/guest-controller";
 import { useSessionController } from "@/controller/session-controller";
 import { getRoom } from "@/data/room-provider";
 import { useRoomStore } from "@/store";
-import { Button, Card, IconButton, Typography } from "@mui/material";
-import { IconShare } from "@tabler/icons-react";
+import { Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export type RoomData = {
@@ -97,6 +96,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
         <GuestTable
           paginationData={guestController.getPaginationData()}
           onAddClicked={guestController.handleOpenDialogAdd}
+          onSendAllQrCode={guestController.handleSendAllQrCode}
           onEditClicked={guestController.handleOpenDialogEdit}
           onSearching={(query) => guestController.setPaginationSearch(query)}
           onPageChanged={(page) => guestController.setPaginationPage(page)}
