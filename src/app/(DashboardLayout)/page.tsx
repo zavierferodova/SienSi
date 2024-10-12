@@ -5,10 +5,11 @@ import TopRoom from "@/components/dashboard/TopRoom";
 import TopRoomAttendance from "@/components/dashboard/TopRoomAttendance";
 import TableSkeleton from "@/components/skeleton/TableSkeleton";
 import { useDashboardController } from "@/controller/dashboard-controller";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 
 const Dashboard = () => {
   const { insight, topRooms, topRoomAttendances } = useDashboardController();
+
   return (
     <>
       <PageContainer title="Dashboard | Siensi" description="presensi">

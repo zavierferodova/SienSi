@@ -16,6 +16,7 @@ export default function SessionPage({
 }: {
   params: { id: string; sessionId: string };
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openSnackbar, snackbarController] = useConsecutiveSnackbars();
   const [attendancePercent, setAttendancePercent] = useState(0);
   const attendanceController = useAttendanceController(
@@ -35,6 +36,7 @@ export default function SessionPage({
       }
     };
     f();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attendanceController]);
 
   return (

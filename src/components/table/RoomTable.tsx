@@ -69,8 +69,8 @@ const RoomTable = ({
 }: RoomTableProps) => {
   const rooms = paginationData?.rooms || [];
   const totalRooms = paginationData?.total || 0;
-  const page = (paginationData?.page || 1) - 1;
-  const limit = paginationData?.limit || 10;
+  // const page = (paginationData?.page || 1) - 1;
+  // const limit = paginationData?.limit || 10;
 
   const columns: GridColDef[] = [
     {
@@ -193,8 +193,19 @@ const RoomTable = ({
         <Box>
           <Box sx={{ height: 350, width: "100%" }}>
             <DataGrid
+              paginationMode="server"
+              rowCount={totalRooms}
               rows={rooms}
               columns={columns}
+              pageSizeOptions={[5, 10, 25, 50, 100]}
+              onPaginationModelChange={(param) => {
+                if (onRowsPerPageChange) {
+                  onRowsPerPageChange(param.pageSize);
+                }
+                if (onPageChanged) {
+                  onPageChanged(param.page + 1);
+                }
+              }}
               disableRowSelectionOnClick
             />
           </Box>

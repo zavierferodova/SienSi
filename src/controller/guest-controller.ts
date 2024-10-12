@@ -82,6 +82,7 @@ export function useGuestController(
 
   const performFetchPagination = useCallback(() => {
     fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationPage, paginationLimit, paginationSearch]);
 
   const fetchAddGuest = async (guest: GuestModel) => {

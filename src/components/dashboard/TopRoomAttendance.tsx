@@ -2,10 +2,12 @@ import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { useTheme } from "@mui/material/styles";
 import { TopRoomAttendancesModel } from "@/model/dashboard";
+import { ApexOptions } from "apexcharts";
 
 const TopRoomAttendance = ({ data }: { data: TopRoomAttendancesModel }) => {
   const names = data.map((item) => item.name);
-  const totalPercentages = data.map((item) => item.percentageAttendance);
+  const totalSum = data.reduce((sum, item) => sum + item.percentageAttendance, 0);
+  const totalPercentages = data.map((item) => (item.percentageAttendance / totalSum) * 100);
 
   // chart color
   const theme = useTheme();
@@ -13,8 +15,15 @@ const TopRoomAttendance = ({ data }: { data: TopRoomAttendancesModel }) => {
   const primarylight = "#ecf2ff";
 
   // chart
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const optionscolumnchart: any = {
+  const optionscolumnchart: ApexOptions = {
+    title: {
+      text: "Top Room by Percentage Attendance",
+      align: "center",
+      style: {
+        fontSize: "16px",
+        color: theme.palette.text.primary,
+      },
+    },
     chart: {
       type: "donut",
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
@@ -59,7 +68,9 @@ const TopRoomAttendance = ({ data }: { data: TopRoomAttendancesModel }) => {
       },
     ],
   };
+
   const seriescolumnchart = totalPercentages;
+  console.log(seriescolumnchart);
 
   return (
     <Chart

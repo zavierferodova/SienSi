@@ -294,6 +294,7 @@ const AttendanceTable = ({
               count={totalAttendances}
               page={page}
               rowsPerPage={limit}
+              rowsPerPageOptions={[1, 5, 10, 25]}
               onRowsPerPageChange={(e) => {
                 if (onRowsPerPageChange) {
                   onRowsPerPageChange(parseInt(e.target.value));
@@ -301,7 +302,7 @@ const AttendanceTable = ({
               }}
               onPageChange={(e, page) => {
                 if (onPageChanged) {
-                  onPageChanged(page);
+                  onPageChanged(page + 1);
                 }
               }}
             />

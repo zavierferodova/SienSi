@@ -256,7 +256,7 @@ const SessionTable = ({
             }}
             onPageChange={(e, page) => {
               if (onPageChanged) {
-                onPageChanged(page);
+                onPageChanged(page + 1);
               }
             }}
           />

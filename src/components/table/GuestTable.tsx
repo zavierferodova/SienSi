@@ -8,11 +8,9 @@ import {
   Button,
   TextFieldProps,
   InputAdornment,
-  TablePagination,
   Avatar,
   Chip,
   Tooltip,
-  Skeleton,
 } from "@mui/material";
 
 import {
@@ -26,7 +24,7 @@ import CustomTextField from "../forms/theme-elements/CustomTextField";
 import { styled } from "@mui/material/styles";
 import GuestModel from "@/model/guest";
 import { IconSend } from "@tabler/icons-react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 
 const RoundTextField = styled((props: TextFieldProps) => (
@@ -79,8 +77,9 @@ const GuestTable = ({
 }: GuestTableProps) => {
   const guests = paginationData?.guests || [];
   const totalGuests = paginationData?.total || 0;
-  const page = (paginationData?.page || 1) - 1;
-  const limit = paginationData?.limit || 10;
+  // const page = (paginationData?.page || 1) - 1;
+  // const limit = paginationData?.limit || 10;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
 
   const columns: GridColDef[] = [
@@ -247,7 +246,7 @@ const GuestTable = ({
     },
   ];
 
-  const handleSelectionChange = (selectionModel: any) => {
+  const handleSelectionChange = (selectionModel: GridRowSelectionModel) => {
     const selectedRows = guests.filter((guest) =>
       selectionModel.includes(guest.id)
     );
@@ -256,7 +255,7 @@ const GuestTable = ({
   };
 
   return (
-    <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px" }}>
+    <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px", width: "100%" }}>
       <CardContent>
         <div className="flex flex-col md:flex-row">
           <div className="flex mb-4 flex-grow">
@@ -309,30 +308,24 @@ const GuestTable = ({
         <Box>
           <Box sx={{ height: 350, width: "100%" }}>
             <DataGrid
+              paginationMode="server"
+              rowCount={totalGuests}
               rows={guests}
               columns={columns}
               checkboxSelection
               disableRowSelectionOnClick
+              pageSizeOptions={[5, 10, 25, 50, 100]}
               onRowSelectionModelChange={handleSelectionChange}
+              onPaginationModelChange={(param) => {
+                if (onRowsPerPageChange) {
+                  onRowsPerPageChange(param.pageSize);
+                }
+                if (onPageChanged) {
+                  onPageChanged(param.page + 1);
+                }
+              }}
             />
           </Box>
-          <TablePagination
-            sx={{ marginTop: 2 }}
-            component="div"
-            count={totalGuests}
-            page={page}
-            rowsPerPage={limit}
-            onRowsPerPageChange={(e) => {
-              if (onRowsPerPageChange) {
-                onRowsPerPageChange(parseInt(e.target.value));
-              }
-            }}
-            onPageChange={(e, page) => {
-              if (onPageChanged) {
-                onPageChanged(page);
-              }
-            }}
-          />
         </Box>
       </CardContent>
     </Card>

@@ -6,6 +6,7 @@ import Image from "next/image";
 
 export default function NotFound() {
   const theme = useTheme();
+
   return (
     <div className="grid h-screen place-content-center px-4">
       <div className="text-center">

@@ -52,6 +52,7 @@ const guestFormSchema = z.object({
   }),
   email: z.string().email({ message: "Email tidak valid" }),
   gender: z.enum(["male", "female"], {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     errorMap: (issue, ctx) => ({ message: "Pilih salah satu jenis kelamin" }),
   }),
   address: z

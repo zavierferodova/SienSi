@@ -62,18 +62,18 @@ export function useSessionController(
     return data;
   };
 
-  const fetchPaginationData = async (
-    page?: number,
-    limit?: number,
-    search?: string
-  ) => {
-    const response = await getSessionPagination(page, limit, search, roomId);
-    setPaginationData(response);
-  };
-
   const performFetchPagination = useCallback(() => {
+    const fetchPaginationData = async (
+      page?: number,
+      limit?: number,
+      search?: string
+    ) => {
+      const response = await getSessionPagination(page, limit, search, roomId);
+      setPaginationData(response);
+    };
+
     fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
-  }, [paginationPage, paginationLimit, paginationSearch]);
+  }, [paginationPage, paginationLimit, paginationSearch, roomId]);
 
   const fetchAddSession = async (session: SessionModel) => {
     const response = await addSession(session, roomId);

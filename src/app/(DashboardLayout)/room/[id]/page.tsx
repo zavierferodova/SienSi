@@ -48,6 +48,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
       return undefined;
     };
     getRoomData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

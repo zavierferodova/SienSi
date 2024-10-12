@@ -55,6 +55,7 @@ export function useAttendanceController(
 
   const performFetchPagination = useCallback(() => {
     fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationPage, paginationLimit, paginationSearch]);
 
   const fetchAttendanceCheck = async (guestKey: string) => {

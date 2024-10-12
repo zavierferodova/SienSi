@@ -7,14 +7,22 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const TopRoom = ({ data }: { data: TopRoomsModel }) => {
   const names = data.map((item) => item.name);
   const totalGuests = data.map((item) => item.totalGuests);
-  // chart color
+  // Chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
 
-  // chart
+  // Chart
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const optionscolumnchart: any = {
+    title: {
+      text: "Top Room by Guest Ammounts",
+      align: "left",
+      style: {
+        fontSize: "16px",
+        color: theme.palette.text.primary,
+      },
+    },
     chart: {
       type: "bar",
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
