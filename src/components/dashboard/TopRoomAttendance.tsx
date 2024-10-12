@@ -6,8 +6,13 @@ import { ApexOptions } from "apexcharts";
 
 const TopRoomAttendance = ({ data }: { data: TopRoomAttendancesModel }) => {
   const names = data.map((item) => item.name);
-  const totalSum = data.reduce((sum, item) => sum + item.percentageAttendance, 0);
-  const totalPercentages = data.map((item) => (item.percentageAttendance / totalSum) * 100);
+  const totalSum = data.reduce(
+    (sum, item) => sum + item.percentageAttendance,
+    0
+  );
+  const totalPercentages = data.map(
+    (item) => (item.percentageAttendance / totalSum) * 100
+  );
 
   // chart color
   const theme = useTheme();
@@ -17,7 +22,7 @@ const TopRoomAttendance = ({ data }: { data: TopRoomAttendancesModel }) => {
   // chart
   const optionscolumnchart: ApexOptions = {
     title: {
-      text: "Top Room by Percentage Attendance",
+      text: "Ruangan dengan Kehadiran Tertinggi",
       align: "center",
       style: {
         fontSize: "16px",
@@ -62,8 +67,7 @@ const TopRoomAttendance = ({ data }: { data: TopRoomAttendancesModel }) => {
       {
         breakpoint: 991,
         options: {
-          chart: {
-          },
+          chart: {},
         },
       },
     ],

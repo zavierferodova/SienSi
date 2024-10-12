@@ -48,7 +48,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
       return undefined;
     };
     getRoomData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -68,7 +68,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
                   {roomData?.name}
                 </Typography>
               </div>
-              <Typography variant="body2" color="gray">
+              <Typography variant="body1" color="gray">
                 {roomData?.description}
               </Typography>
             </Card>
@@ -80,7 +80,9 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
                 onSearching={(query) =>
                   sessionController.setPaginationSearch(query)
                 }
-                onPageChanged={(page) => sessionController.setPaginationPage(page)}
+                onPageChanged={(page) =>
+                  sessionController.setPaginationPage(page)
+                }
                 onRowsPerPageChange={(limit) =>
                   sessionController.setPaginationLimit(limit)
                 }
@@ -106,7 +108,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
               guestController.setPaginationLimit(limit)
             }
           />
-          </div>
+        </div>
       </PageContainer>
 
       <ConsecutiveSnackbars controller={snackbarController} />

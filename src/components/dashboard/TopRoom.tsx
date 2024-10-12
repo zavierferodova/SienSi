@@ -16,7 +16,7 @@ const TopRoom = ({ data }: { data: TopRoomsModel }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const optionscolumnchart: any = {
     title: {
-      text: "Top Room by Guest Ammounts",
+      text: "Ruangan dengan Tamu Terbanyak",
       align: "left",
       style: {
         fontSize: "16px",
