@@ -7,6 +7,7 @@ const LinkStyled = styled(Link)(() => ({
   width: "180px",
   overflow: "hidden",
   display: "flex",
+  marginTop: "15px",
 }));
 
 const Logo = () => {
@@ -16,7 +17,7 @@ const Logo = () => {
         src="/images/logos/logo-siensi.png"
         alt="logo"
         height={70}
-        width={174}
+        width={180}
         priority
       />
     </LinkStyled>
