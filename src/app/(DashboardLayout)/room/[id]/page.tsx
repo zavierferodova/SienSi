@@ -7,7 +7,7 @@ import DialogCustomizeGuest from "@/components/dialog/DialogCustomizeGuest";
 import DialogCustomizeSession from "@/components/dialog/DialogCustomizeSession";
 import DialogQRGuest from "@/components/dialog/DialogQRGuest";
 import DialogDelete from "@/components/dialog/DialogQuestion";
-import TableSkeleton from "@/components/skeleton/table-skeleton";
+import TableSkeleton from "@/components/skeleton/TableSkeleton";
 import GuestTable from "@/components/table/GuestTable";
 import SessionTable from "@/components/table/SessionTable";
 import { useGuestController } from "@/controller/guest-controller";

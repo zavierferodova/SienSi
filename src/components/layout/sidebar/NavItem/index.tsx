@@ -31,7 +31,7 @@ interface ItemType {
   level?: number | any;
 }
 
-const NavItem = ({ item, level,  onClick }: ItemType) => {
+const NavItem = ({ item, level, onClick }: ItemType) => {
   const pathname = usePathname();
   const isSelected = (path: string) => {
     if (path === "/") {
@@ -39,7 +39,6 @@ const NavItem = ({ item, level,  onClick }: ItemType) => {
     }
     return pathname.startsWith(path);
   };
-  console.log(isSelected("/"), isSelected("/room"));
   const Icon = item.icon;
   const theme = useTheme();
   const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
