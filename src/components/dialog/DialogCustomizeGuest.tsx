@@ -50,6 +50,7 @@ const guestFormSchema = z.object({
   name: z.string().min(3, {
     message: "Nama minimal 3 karakter",
   }),
+  email: z.string().email({ message: "Email tidak valid" }),
   gender: z.enum(["male", "female"], {
     errorMap: (issue, ctx) => ({ message: "Pilih salah satu jenis kelamin" }),
   }),
@@ -58,7 +59,6 @@ const guestFormSchema = z.object({
     .min(3, { message: "Alamat tidak valid" })
     .max(255, { message: "Alamat maksimal 255 karakter" })
     .optional(),
-  email: z.string().email({ message: "Email tidak valid" }).optional(),
   phone: z
     .string()
     .min(10, { message: "Nomor telepon tidak valid" })
@@ -75,17 +75,17 @@ const DialogCustomizeGuest = ({
   const [defaultValues, setDefaultValues] = useState({
     key: "",
     name: "",
+    email: "",
     gender: "",
     address: "",
-    email: "",
     phone: "",
   });
   const [formError, setFormError] = useState({
     key: "",
     name: "",
+    email: "",
     gender: "",
     address: "",
-    email: "",
     phone: "",
   });
 
@@ -101,6 +101,7 @@ const DialogCustomizeGuest = ({
       key: formData.get("key")?.toString() || "",
       name: formData.get("name")?.toString() || "",
       gender: formData.get("gender")?.toString() || "",
+      email: formData.get("email")?.toString() || "",
     };
     try {
       if (onSave != null) {
@@ -108,9 +109,6 @@ const DialogCustomizeGuest = ({
           ...data,
           ...(formData.get("address")
             ? { address: formData.get("address")?.toString() }
-            : {}),
-          ...(formData.get("email")
-            ? { email: formData.get("email")?.toString() }
             : {}),
           ...(formData.get("phone")
             ? { phone: formData.get("phone")?.toString() }
@@ -121,12 +119,14 @@ const DialogCustomizeGuest = ({
           ...data,
           address: formData.get("address")?.toString() ?? "",
           email: formData.get("email")?.toString() ?? "",
-          phone: formData.get("phone")?.toString() ?? "",
           id: guest?.id ?? "",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           roomId: guest?.roomId ?? "",
           photo: guest?.photo ?? "",
+          ...(formData.get("phone") !== ""
+            ? { phone: formData.get("phone")?.toString() }
+            : {}),
         } as GuestModel);
       }
     } catch (error) {
@@ -134,9 +134,9 @@ const DialogCustomizeGuest = ({
         const newErrors = {
           key: "",
           name: "",
+          email: "",
           gender: "",
           address: "",
-          email: "",
           phone: "",
         };
 
@@ -155,9 +155,9 @@ const DialogCustomizeGuest = ({
       setFormError({
         key: "",
         name: "",
+        email: "",
         gender: "",
         address: "",
-        email: "",
         phone: "",
       });
       onClose();
@@ -174,18 +174,18 @@ const DialogCustomizeGuest = ({
       setDefaultValues({
         key: guest.key,
         name: guest.name,
+        email: guest.email,
         gender: guest.gender,
         address: guest.address,
-        email: guest.email,
         phone: guest.phone,
       });
     } else {
       setDefaultValues({
         key: "",
         name: "",
+        email: "",
         gender: "",
         address: "",
-        email: "",
         phone: "",
       });
     }
@@ -262,6 +262,18 @@ const DialogCustomizeGuest = ({
               </Stack>
               <Stack spacing={1}>
                 <Typography variant="subtitle2" fontWeight={600}>
+                  Email
+                </Typography>
+                <CustomTextField
+                  inputMode="email"
+                  defaultValue={defaultValues.email}
+                  name="email"
+                  helperText={formError.email}
+                  placeholder="example@mail.com"
+                />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" fontWeight={600}>
                   Kelamin
                 </Typography>
                 <FormControl>
@@ -294,18 +306,6 @@ const DialogCustomizeGuest = ({
                   rows={4}
                   multiline
                   placeholder="Kec. Provinsi, Kota"
-                />
-              </Stack>
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" fontWeight={600}>
-                  Email
-                </Typography>
-                <CustomTextField
-                  inputMode="email"
-                  defaultValue={defaultValues.email}
-                  name="email"
-                  helperText={formError.email}
-                  placeholder="example@mail.com"
                 />
               </Stack>
               <Stack spacing={1}>

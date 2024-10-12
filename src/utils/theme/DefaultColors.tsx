@@ -12,7 +12,7 @@ const baselightTheme = createTheme({
   direction: "ltr",
   palette: {
     primary: {
-      main: "#f23c34",
+      main: "#5D87FF",
       light: "#ECF2FF",
       dark: "#4570EA",
     },
@@ -34,7 +34,7 @@ const baselightTheme = createTheme({
       contrastText: "#ffffff",
     },
     error: {
-      main: "#FA896B",
+      main: "#f23c34",
       light: "#FDEDE8",
       dark: "#f3704d",
       contrastText: "#ffffff",
@@ -129,16 +129,6 @@ const baselightTheme = createTheme({
         ".MuiPaper-elevation9, .MuiPopover-root .MuiPaper-elevation": {
           boxShadow:
             "rgb(145 158 171 / 30%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px !important",
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px",
-          ":hover": {
-            backgroundColor: "#fd8984",
-          }
         },
       },
     },

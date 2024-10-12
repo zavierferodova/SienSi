@@ -112,3 +112,21 @@ export const deleteGuest = async (
     return false;
   }
 };
+
+export const sendAllQrCode = async (roomId: string): Promise<boolean> => {
+  try {
+    const response = await fetchWithSession(
+      `${API_BASE_PATH}/room/${roomId}/send-all-qrcode`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+};

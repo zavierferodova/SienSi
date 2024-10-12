@@ -13,8 +13,7 @@ import { useGuestController } from "@/controller/guest-controller";
 import { useSessionController } from "@/controller/session-controller";
 import { getRoom } from "@/data/room-provider";
 import { useRoomStore } from "@/store";
-import { Button, Card, IconButton, Typography } from "@mui/material";
-import { IconShare } from "@tabler/icons-react";
+import { Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export type RoomData = {
@@ -50,11 +49,12 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
     };
     getRoomData();
   }, []);
+
   return (
     <>
       <PageContainer title="Siensi" description="presensi">
         <div className="flex flex-col items-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 items-start mb-10 gap-2 w-full max-w-[900px] max-h-[500px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-start mb-10 gap-4 w-full max-w-[900px] max-h-[500px]">
             <Card
               sx={{
                 width: "100%",

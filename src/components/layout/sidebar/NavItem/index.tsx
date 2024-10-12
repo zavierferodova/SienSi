@@ -11,6 +11,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type NavGroup = {
   [x: string]: any;
@@ -28,10 +29,16 @@ interface ItemType {
   onClick: (event: React.MouseEvent<HTMLElement>) => void;
   hideMenu?: any;
   level?: number | any;
-  pathDirect: string;
 }
 
-const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
+const NavItem = ({ item, level, onClick }: ItemType) => {
+  const pathname = usePathname();
+  const isSelected = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(path);
+  };
   const Icon = item.icon;
   const theme = useTheme();
   const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
@@ -68,7 +75,7 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
           component={Link}
           href={item.href}
           disabled={item.disabled}
-          selected={pathDirect === item.href}
+          selected={isSelected(item.href)}
           target={item.external ? "_blank" : ""}
           onClick={onClick}
         >
