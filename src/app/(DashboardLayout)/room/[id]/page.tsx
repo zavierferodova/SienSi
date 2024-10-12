@@ -7,6 +7,7 @@ import DialogCustomizeGuest from "@/components/dialog/DialogCustomizeGuest";
 import DialogCustomizeSession from "@/components/dialog/DialogCustomizeSession";
 import DialogQRGuest from "@/components/dialog/DialogQRGuest";
 import DialogDelete from "@/components/dialog/DialogQuestion";
+import TableSkeleton from "@/components/skeleton/table-skeleton";
 import GuestTable from "@/components/table/GuestTable";
 import SessionTable from "@/components/table/SessionTable";
 import { useGuestController } from "@/controller/guest-controller";
@@ -27,7 +28,6 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
   const guestController = useGuestController(params.id, openSnackbar);
   const sessionController = useSessionController(params.id, openSnackbar);
   const roomStore = useRoomStore();
-
   useEffect(() => {
     const getRoomData = async (): Promise<RoomData | undefined> => {
       if (roomStore.room) {
@@ -52,60 +52,74 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
   return (
     <>
       <div className="grid md:grid-cols-3 items-start mb-10 gap-6 max-w-[900px]">
-        <Card
-          sx={{
-            height: "100%",
-            maxHeight: "500px",
-            maxWidth: "900px",
-            columnSpan: 2,
-            padding: 2,
-          }}
-        >
-          <div className="flex justify-between">
-            <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
-              {roomData?.name}
+        {roomData ? (
+          <Card
+            sx={{
+              height: "100%",
+              maxHeight: "500px",
+              maxWidth: "900px",
+              padding: 2,
+              gridColumn: "span 2/2",
+            }}
+          >
+            <div className="flex justify-between">
+              <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
+                {roomData?.name}
+              </Typography>
+            </div>
+            <Typography variant="body2" color="gray">
+              {roomData?.description}
             </Typography>
-          </div>
-          <Typography variant="body2" color="gray">
-            {roomData?.description}
-          </Typography>
-        </Card>
+          </Card>
+        ) : (
+          <TableSkeleton />
+        )}
         <div className="col-span-2">
-          <SessionTable
-            paginationData={sessionController.getPaginationData()}
-            onAddClicked={sessionController.handleOpenDialogAdd}
-            onEditClicked={sessionController.handleOpenDialogEdit}
-            onSearching={(query) =>
-              sessionController.setPaginationSearch(query)
-            }
-            onPageChanged={(page) => sessionController.setPaginationPage(page)}
-            onRowsPerPageChange={(limit) =>
-              sessionController.setPaginationLimit(limit)
-            }
-            onViewDetailClicked={(id) =>
-              sessionController.viewSessionDetail(id)
-            }
-            onDeleteClicked={(id) => sessionController.removeSession(id)}
-            onDownloadExcelClicked={(id) =>
-              sessionController.downloadExcelAttendances(id)
-            }
-          />
+          {sessionController.getPaginationData() ? (
+            <SessionTable
+              paginationData={sessionController.getPaginationData()}
+              onAddClicked={sessionController.handleOpenDialogAdd}
+              onEditClicked={sessionController.handleOpenDialogEdit}
+              onSearching={(query) =>
+                sessionController.setPaginationSearch(query)
+              }
+              onPageChanged={(page) =>
+                sessionController.setPaginationPage(page)
+              }
+              onRowsPerPageChange={(limit) =>
+                sessionController.setPaginationLimit(limit)
+              }
+              onViewDetailClicked={(id) =>
+                sessionController.viewSessionDetail(id)
+              }
+              onDeleteClicked={(id) => sessionController.removeSession(id)}
+              onDownloadExcelClicked={(id) =>
+                sessionController.downloadExcelAttendances(id)
+              }
+            />
+          ) : (
+            <TableSkeleton />
+          )}
         </div>
       </div>
       <PageContainer title="Siensi" description="presensi">
-        <GuestTable
-          paginationData={guestController.getPaginationData()}
-          onAddClicked={guestController.handleOpenDialogAdd}
-          onSendAllQrCode={guestController.handleSendAllQrCode}
-          onEditClicked={guestController.handleOpenDialogEdit}
-          onSearching={(query) => guestController.setPaginationSearch(query)}
-          onPageChanged={(page) => guestController.setPaginationPage(page)}
-          onDeleteClicked={(guest) => guestController.removeGuest(guest)}
-          onQRImageClicked={guestController.viewGuestQRImage}
-          onRowsPerPageChange={(limit) =>
-            guestController.setPaginationLimit(limit)
-          }
-        />
+        {guestController.getPaginationData() ? (
+          <GuestTable
+            paginationData={guestController.getPaginationData()}
+            onAddClicked={guestController.handleOpenDialogAdd}
+            onSendAllQrCode={guestController.handleSendAllQrCode}
+            onEditClicked={guestController.handleOpenDialogEdit}
+            onSearching={(query) => guestController.setPaginationSearch(query)}
+            onPageChanged={(page) => guestController.setPaginationPage(page)}
+            onDeleteClicked={(guest) => guestController.removeGuest(guest)}
+            onQRImageClicked={guestController.viewGuestQRImage}
+            onRowsPerPageChange={(limit) =>
+              guestController.setPaginationLimit(limit)
+            }
+          />
+        ) : (
+          <TableSkeleton />
+        )}
       </PageContainer>
 
       <ConsecutiveSnackbars controller={snackbarController} />

@@ -97,7 +97,21 @@ const Sidebar = ({
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}
       {/* ------------------------------------------- */}
-      <SidebarItems />
+      <Box
+        sx={{
+          height: "100%",
+        }}
+      >
+        <SidebarItems />
+      </Box>
+      <Box
+        sx={{
+          marginY: 4,
+          paddingX: 3,
+        }}
+      >
+        <DialogLogout />
+      </Box>
     </Drawer>
   );
 };
