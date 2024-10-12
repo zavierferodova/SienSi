@@ -25,7 +25,7 @@ export default function DialogLogout() {
     <>
       <Button
         variant="outlined"
-        color="primary"
+        color="error"
         fullWidth
         onClick={handleClickOpen}
         sx={{
@@ -49,10 +49,12 @@ export default function DialogLogout() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button color="inherit" onClick={handleClose}>
+          <Button variant="outlined" color="inherit" onClick={handleClose}>
             Batal
           </Button>
           <Button
+            variant="contained"
+            color="error"
             autoFocus
             onClick={() => {
               removeSessionFromClient(router);
