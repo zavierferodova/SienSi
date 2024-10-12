@@ -74,6 +74,7 @@ export function useAttendanceController(
   const checkAttendance = async (guestKey: string) => {
     snackbarDispatcher("Melakukan presensi...", "info");
     const response = await fetchAttendanceCheck(guestKey);
+    console.log(response);
     if (response === "success") {
       snackbarDispatcher("Berhasil melakukan presensi!", "success");
       performFetchPagination();
@@ -111,14 +112,16 @@ export function useAttendanceController(
 
   useEffect(() => {
     const f = async () => {
-      const guests = await getGuestPagination(sessionId);
+      const guests = await getGuestPagination(roomId);
       const paginationData = getPaginationData();
+
       if (paginationData && guests) {
         setAttendancePercentage((paginationData.total / guests.total) * 100);
       }
     };
 
     f();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPaginationData, sessionId]);
 
   return {

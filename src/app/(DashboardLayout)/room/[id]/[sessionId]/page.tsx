@@ -2,7 +2,7 @@
 import PageContainer from "@/components/container/PageContainer";
 import AttendanceTable from "@/components/table/AttendanceTable";
 import CameraCard from "@/components/dashboard/CameraCard";
-import { useConsecutiveSnackbars } from "@/components/dashboard/ConsecutiveSnackbars";
+import ConsecutiveSnackbars, { useConsecutiveSnackbars } from "@/components/dashboard/ConsecutiveSnackbars";
 import { useAttendanceController } from "@/controller/attendance-controller";
 import { PieChart } from "@mui/x-charts";
 import DialogDetailAttendance from "@/components/dialog/DialogDetailAttendance";
@@ -35,12 +35,12 @@ export default function SessionPage({
                     {
                       data: [
                         {
-                          label: "Hadir",
-                          value: attendanceController.attendancePercentage,
-                        },
-                        {
                           label: "Tidak Hadir",
                           value: 100 - attendanceController.attendancePercentage,
+                        },
+                        {
+                          label: "Hadir",
+                          value: attendanceController.attendancePercentage,
                         },
                       ],
                       highlightScope: { fade: "global", highlight: "item" },
@@ -86,6 +86,8 @@ export default function SessionPage({
             </div>
           </div>
       </PageContainer>
+
+      <ConsecutiveSnackbars controller={snackbarController} />
 
       <DialogDetailAttendance
         open={attendanceController.openDetailDialog}

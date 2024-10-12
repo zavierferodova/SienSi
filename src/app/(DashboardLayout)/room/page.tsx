@@ -46,8 +46,6 @@ export default function RoomPage() {
         mode={roomController.paginationDialogMode}
         room={roomController.editingRoom}
         onSave={(room) => {
-          console.log("dialog room")
-          console.log(room)
           if (roomController.paginationDialogMode == "add") {
             roomController.saveRoom(room);
           } else {

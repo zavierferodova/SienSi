@@ -37,9 +37,12 @@ const guestFormSchema = z.object({
   name: z.string().min(3, {
     message: "Nama minimal 3 karakter",
   }),
-  description: z.string().min(3, {
-    message: "Deskripsi minimal 3 karakter",
-  }).max(255, { message: "Deskripsi maksimal 255 karakter" }),
+  description: z
+    .string()
+    .min(3, {
+      message: "Deskripsi minimal 3 karakter",
+    })
+    .max(255, { message: "Deskripsi maksimal 255 karakter" }),
 });
 
 const DialogCustomizeRoom = ({
@@ -51,12 +54,12 @@ const DialogCustomizeRoom = ({
 }: DialogCustomizeGuestProps) => {
   const [defaultValues, setDefaultValues] = useState({
     name: "",
-    description: ""
+    description: "",
   });
 
   const [formError, setFormError] = useState({
     name: "",
-    description: ""
+    description: "",
   });
 
   if (room == null && mode == "edit") {
@@ -75,12 +78,12 @@ const DialogCustomizeRoom = ({
     try {
       if (onSave != null) {
         guestFormSchema.parse({
-          ...data
+          ...data,
         });
 
         onSave({
           id: room?.id || "",
-          ...data
+          ...data,
         } as RoomModel);
       }
     } catch (error) {
@@ -155,13 +158,13 @@ const DialogCustomizeRoom = ({
             <Stack spacing={2}>
               <Stack spacing={1}>
                 <Typography variant="subtitle2" fontWeight={600}>
-                  Name
+                  Nama
                 </Typography>
                 <CustomTextField
                   defaultValue={defaultValues.name}
                   name="name"
                   helperText={formError.name}
-                  placeholder="Budi Rakhmadi"
+                  placeholder="Ruangan 1"
                 />
               </Stack>
               <Stack spacing={1}>

@@ -28,8 +28,6 @@ export function useRoomController(
   const handleOpenDialogEdit = (room: RoomModel) => {
     setPaginationDialogMode("edit");
     setOpenPaginationDialog(true);
-    console.log("edit")
-    console.log(room)
     setEditingRoom(room);
   };
 

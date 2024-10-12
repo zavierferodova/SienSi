@@ -5,19 +5,19 @@ import { BarChart, Star, Person } from "@mui/icons-material";
 const Insight = ({ data }: { data: InsightsModel }) => {
   const insightsData = [
     {
-      label: "Rooms",
+      label: "Ruangan",
       value: data.totalRooms.toString(),
       icon: Star,
       color: "#0080ff21",
     },
     {
-      label: "Guests",
+      label: "Tamu",
       value: data.totalGuests.toString(),
       icon: Person,
       color: "#0080ff21",
     },
     {
-      label: "Attendance %",
+      label: "Kehadiran %",
       value: `${data.percentageAttendances.toFixed(1)}%`,
       icon: BarChart,
       color: "#0080ff21",
