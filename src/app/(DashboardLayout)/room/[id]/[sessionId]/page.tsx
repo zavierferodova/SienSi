@@ -35,6 +35,7 @@ export default function SessionPage({
     };
     f();
   }, [attendanceController]);
+
   return (
     <>
       <PageContainer title="Siensi" description="presensi">

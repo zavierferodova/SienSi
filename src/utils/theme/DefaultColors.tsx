@@ -132,6 +132,16 @@ const baselightTheme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "8px",
+          ":hover": {
+            backgroundColor: "#fd8984",
+          }
+        },
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {

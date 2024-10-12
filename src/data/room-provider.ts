@@ -8,6 +8,7 @@ export type RoomPaginationResponse = {
   page: number;
   limit: number;
 };
+
 export type RoomResponse = {
   room: RoomModel;
 };
@@ -26,6 +27,7 @@ export const getRoom = async (roomId: string): Promise<RoomResponse | null> => {
     return null;
   }
 };
+
 export const getRoomPagination = async (
   page = 1,
   limit = 10,

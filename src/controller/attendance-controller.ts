@@ -57,7 +57,7 @@ export function useAttendanceController(
     fetchPaginationData(paginationPage, paginationLimit, paginationSearch);
   }, [paginationPage, paginationLimit, paginationSearch]);
 
-  const fetchAttendanceCheck = async (guestKey: number) => {
+  const fetchAttendanceCheck = async (guestKey: string) => {
     const response = await attendanceCheck(guestKey, roomId, sessionId);
     return response;
   };
@@ -67,7 +67,7 @@ export function useAttendanceController(
     return response;
   };
 
-  const checkAttendance = async (guestKey: number) => {
+  const checkAttendance = async (guestKey: string) => {
     snackbarDispatcher("Melakukan presensi...", "info");
     const response = await fetchAttendanceCheck(guestKey);
     if (response === "success") {

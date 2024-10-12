@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { ConsecutiveSnackbarsDispatcher } from "./ConsecutiveSnackbars";
 
 type CameraCardProps = {
-  onQRScanned?: (data: number) => void;
+  onQRScanned?: (data: string) => void;
   snackbarDispatcher: ConsecutiveSnackbarsDispatcher;
 };
 
@@ -34,7 +34,7 @@ const CameraCard = ({ onQRScanned, snackbarDispatcher }: CameraCardProps) => {
 
   const onScanSuccess = (result: QrScanner.ScanResult) => {
     if (onQRScanned) {
-      onQRScanned(parseInt(result.data));
+      onQRScanned(result.data);
       snackbarDispatcher("Berhasil menambahkan tamu!", "success");
     }
   };
