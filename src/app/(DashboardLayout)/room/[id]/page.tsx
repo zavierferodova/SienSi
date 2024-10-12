@@ -102,7 +102,10 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
           )}
         </div>
       </div>
-      <PageContainer title="Siensi" description="presensi">
+      <PageContainer
+        title={`${roomData?.name}  | Siensi`}
+        description="presensi"
+      >
         {guestController.getPaginationData() ? (
           <GuestTable
             paginationData={guestController.getPaginationData()}
