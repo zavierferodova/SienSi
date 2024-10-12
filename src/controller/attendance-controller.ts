@@ -6,6 +6,7 @@ import {
   getAttendancePagination,
   getExcelAttendance,
 } from "@/data/attendance-provider";
+import { getGuestPagination } from "@/data/guest-provider";
 import AttendanceModel from "@/model/attendance";
 import { useCallback, useEffect, useState } from "react";
 
@@ -14,6 +15,7 @@ export function useAttendanceController(
   roomId: string,
   sessionId: string
 ) {
+  const [attendancePercentage, setAttendancePercentage] = useState(0);
   const [paginationData, setPaginationData] =
     useState<AttendancePaginationResponse | null>(null);
   const [paginationLimit, setPaginationLimit] = useState(10);
@@ -24,8 +26,9 @@ export function useAttendanceController(
     useState<AttendanceModel | null>(null);
   const dialogQuestion = useDialogQuestion();
 
-  const getPaginationData = () => {
+  const getPaginationData = useCallback(() => {
     let data;
+
     if (paginationData) {
       data = {
         page: paginationData.page,
@@ -36,7 +39,7 @@ export function useAttendanceController(
     }
 
     return data;
-  };
+  }, [paginationData]);
 
   const fetchPaginationData = async (
     page?: number,
@@ -106,7 +109,20 @@ export function useAttendanceController(
     performFetchPagination();
   }, [performFetchPagination]);
 
+  useEffect(() => {
+    const f = async () => {
+      const guests = await getGuestPagination(sessionId);
+      const paginationData = getPaginationData();
+      if (paginationData && guests) {
+        setAttendancePercentage((paginationData.total / guests.total) * 100);
+      }
+    };
+
+    f();
+  }, [getPaginationData, sessionId]);
+
   return {
+    attendancePercentage,
     openClearDialog: dialogQuestion.open,
     closeClearDialog: dialogQuestion.handleClose,
     acceptClearDialog: dialogQuestion.handleAccept,

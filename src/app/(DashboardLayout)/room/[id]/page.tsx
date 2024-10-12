@@ -9,12 +9,8 @@ import DialogQRGuest from "@/components/dialog/DialogQRGuest";
 import DialogDelete from "@/components/dialog/DialogQuestion";
 import GuestTable from "@/components/table/GuestTable";
 import SessionTable from "@/components/table/SessionTable";
-import { useGuestController } from "@/controller/guest-controller";
-import { useSessionController } from "@/controller/session-controller";
-import { getRoom } from "@/data/room-provider";
-import { useRoomStore } from "@/store";
+import useDetailRoomController from "@/controller/detail-room-controller";
 import { Card, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 
 export type RoomData = {
   name: string;
@@ -23,33 +19,7 @@ export type RoomData = {
 
 export default function DetailRoomPage({ params }: { params: { id: string } }) {
   const [openSnackbar, snackbarController] = useConsecutiveSnackbars();
-  const [roomData, setRoomData] = useState<RoomData | undefined>(undefined);
-  const guestController = useGuestController(params.id, openSnackbar);
-  const sessionController = useSessionController(params.id, openSnackbar);
-  const roomStore = useRoomStore();
-
-  useEffect(() => {
-    const getRoomData = async (): Promise<RoomData | undefined> => {
-      if (roomStore.room) {
-        setRoomData({
-          name: roomStore.room.name,
-          description: roomStore.room.description,
-        });
-      } else {
-        const data = await getRoom(params.id);
-        if (data && data.room) {
-          roomStore.setRoom(data.room);
-          setRoomData({
-            name: data.room.name,
-            description: data.room.description,
-          });
-        }
-      }
-      return undefined;
-    };
-    getRoomData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { roomData, sessionController, guestController } = useDetailRoomController(params.id, openSnackbar);
 
   return (
     <>

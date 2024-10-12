@@ -4,9 +4,7 @@ import AttendanceTable from "@/components/table/AttendanceTable";
 import CameraCard from "@/components/dashboard/CameraCard";
 import { useConsecutiveSnackbars } from "@/components/dashboard/ConsecutiveSnackbars";
 import { useAttendanceController } from "@/controller/attendance-controller";
-import { getGuestPagination } from "@/data/guest-provider";
 import { PieChart } from "@mui/x-charts";
-import { useEffect, useState } from "react";
 import DialogDetailAttendance from "@/components/dialog/DialogDetailAttendance";
 
 export const valueFormatter = (item: { value: number }) => `${item.value}%`;
@@ -18,26 +16,11 @@ export default function SessionPage({
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openSnackbar, snackbarController] = useConsecutiveSnackbars();
-  const [attendancePercent, setAttendancePercent] = useState(0);
   const attendanceController = useAttendanceController(
     openSnackbar,
     params.id,
     params.sessionId
   );
-
-  useEffect(() => {
-    const f = async () => {
-      const guests = await getGuestPagination(params.id);
-      if (attendanceController) {
-        const paginationData = attendanceController.getPaginationData();
-        if (paginationData && guests) {
-          setAttendancePercent((paginationData.total / guests.total) * 100);
-        }
-      }
-    };
-    f();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attendanceController]);
 
   return (
     <>
@@ -53,11 +36,11 @@ export default function SessionPage({
                       data: [
                         {
                           label: "Hadir",
-                          value: attendancePercent,
+                          value: attendanceController.attendancePercentage,
                         },
                         {
                           label: "Tidak Hadir",
-                          value: 100 - attendancePercent,
+                          value: 100 - attendanceController.attendancePercentage,
                         },
                       ],
                       highlightScope: { fade: "global", highlight: "item" },
