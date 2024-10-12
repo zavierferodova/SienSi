@@ -52,63 +52,64 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
   }, []);
   return (
     <>
-      <div className="grid md:grid-cols-3 items-start mb-10 gap-6 max-w-[900px]">
-        <Card
-          sx={{
-            height: "100%",
-            maxHeight: "500px",
-            maxWidth: "900px",
-            columnSpan: 2,
-            padding: 2,
-          }}
-        >
-          <div className="flex justify-between">
-            <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
-              {roomData?.name}
-            </Typography>
+      <PageContainer title="Siensi" description="presensi">
+        <div className="flex flex-col items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-start mb-10 gap-2 w-full max-w-[900px] max-h-[500px]">
+            <Card
+              sx={{
+                width: "100%",
+                height: "100%",
+                padding: 2,
+              }}
+            >
+              <div className="col-span-1 flex justify-between">
+                <Typography variant="subtitle1" fontSize={18} fontWeight={600}>
+                  {roomData?.name}
+                </Typography>
+              </div>
+              <Typography variant="body2" color="gray">
+                {roomData?.description}
+              </Typography>
+            </Card>
+            <div className="col-span-1 md:col-span-2">
+              <SessionTable
+                paginationData={sessionController.getPaginationData()}
+                onAddClicked={sessionController.handleOpenDialogAdd}
+                onEditClicked={sessionController.handleOpenDialogEdit}
+                onSearching={(query) =>
+                  sessionController.setPaginationSearch(query)
+                }
+                onPageChanged={(page) => sessionController.setPaginationPage(page)}
+                onRowsPerPageChange={(limit) =>
+                  sessionController.setPaginationLimit(limit)
+                }
+                onViewDetailClicked={(id) =>
+                  sessionController.viewSessionDetail(id)
+                }
+                onDeleteClicked={(id) => sessionController.removeSession(id)}
+                onDownloadExcelClicked={(id) =>
+                  sessionController.downloadExcelAttendances(id)
+                }
+              />
+            </div>
           </div>
-          <Typography variant="body2" color="gray">
-            {roomData?.description}
-          </Typography>
-        </Card>
-        <div className="col-span-2">
-          <SessionTable
-            paginationData={sessionController.getPaginationData()}
-            onAddClicked={sessionController.handleOpenDialogAdd}
-            onEditClicked={sessionController.handleOpenDialogEdit}
-            onSearching={(query) =>
-              sessionController.setPaginationSearch(query)
-            }
-            onPageChanged={(page) => sessionController.setPaginationPage(page)}
+          <GuestTable
+            paginationData={guestController.getPaginationData()}
+            onAddClicked={guestController.handleOpenDialogAdd}
+            onEditClicked={guestController.handleOpenDialogEdit}
+            onSearching={(query) => guestController.setPaginationSearch(query)}
+            onPageChanged={(page) => guestController.setPaginationPage(page)}
+            onDeleteClicked={(guest) => guestController.removeGuest(guest)}
+            onQRImageClicked={guestController.viewGuestQRImage}
             onRowsPerPageChange={(limit) =>
-              sessionController.setPaginationLimit(limit)
-            }
-            onViewDetailClicked={(id) =>
-              sessionController.viewSessionDetail(id)
-            }
-            onDeleteClicked={(id) => sessionController.removeSession(id)}
-            onDownloadExcelClicked={(id) =>
-              sessionController.downloadExcelAttendances(id)
+              guestController.setPaginationLimit(limit)
             }
           />
-        </div>
-      </div>
-      <PageContainer title="Siensi" description="presensi">
-        <GuestTable
-          paginationData={guestController.getPaginationData()}
-          onAddClicked={guestController.handleOpenDialogAdd}
-          onEditClicked={guestController.handleOpenDialogEdit}
-          onSearching={(query) => guestController.setPaginationSearch(query)}
-          onPageChanged={(page) => guestController.setPaginationPage(page)}
-          onDeleteClicked={(guest) => guestController.removeGuest(guest)}
-          onQRImageClicked={guestController.viewGuestQRImage}
-          onRowsPerPageChange={(limit) =>
-            guestController.setPaginationLimit(limit)
-          }
-        />
+          </div>
       </PageContainer>
 
       <ConsecutiveSnackbars controller={snackbarController} />
+
       <DialogDelete
         title="Hapus Tamu"
         message="Anda yakin ingin menghapus tamu ini?"
@@ -116,11 +117,13 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
         onClose={guestController.closeDeleteDialog}
         onAccept={guestController.acceptDeleteDialog}
       />
+
       <DialogQRGuest
         open={guestController.openQRDialog}
         qrCode={guestController.qrDialogLink}
         onClose={guestController.closeQRDialog}
       />
+
       <DialogCustomizeGuest
         open={guestController.openPaginationDialog}
         mode={guestController.paginationDialogMode}
@@ -135,7 +138,6 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
         onClose={guestController.handleCloseDialog}
       />
 
-      <ConsecutiveSnackbars controller={snackbarController} />
       <DialogDelete
         title="Hapus Sesi"
         message="Anda yakin ingin menghapus sesi ini?"
@@ -143,6 +145,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
         onClose={sessionController.closeDeleteDialog}
         onAccept={sessionController.acceptDeleteDialog}
       />
+
       <DialogCustomizeSession
         roomId={params.id}
         open={sessionController.openPaginationDialog}

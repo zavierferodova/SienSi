@@ -1,11 +1,6 @@
 import {
   Typography,
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   IconButton,
   Stack,
   Card,
@@ -13,7 +8,6 @@ import {
   Button,
   TextFieldProps,
   InputAdornment,
-  TableContainer,
   TablePagination,
   Avatar,
   Chip,
@@ -89,8 +83,8 @@ const GuestTable = ({
     {
       field: "profile",
       headerName: "Profil",
-      width: 100,
-      renderCell: (params) => <Avatar alt="person image" />,
+      width: 150,
+      renderCell: () => <Avatar alt="person image" />,
       align: "center",
     },
     {
@@ -98,39 +92,43 @@ const GuestTable = ({
       headerName: "Nama",
       width: 200,
       renderCell: (params) => (
-        <Typography
-          sx={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-          variant="subtitle2"
-        >
-          {params.value}
-        </Typography>
+        <div className="h-full flex items-center">
+          <Typography
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            variant="subtitle2"
+          >
+            {params.value}
+          </Typography>
+        </div>
       ),
     },
     {
       field: "key",
       headerName: "Kode Tamu",
       width: 150,
-      align: "center",
       renderCell: (params) => (
-        <Typography
-          sx={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-          variant="subtitle2"
-        >
-          {params.value}
-        </Typography>
+        <div className="h-full flex items-center">
+          <Typography
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            variant="subtitle2"
+          >
+            {params.value}
+          </Typography>
+        </div>
       ),
     },
     {
       field: "gender",
       headerName: "Kelamin",
+      headerAlign: "center",
       width: 150,
       align: "center",
       renderCell: (params) => (
@@ -143,20 +141,23 @@ const GuestTable = ({
     {
       field: "address",
       headerName: "Alamat",
+      headerAlign: "center",
       width: 300,
       align: "center",
       renderCell: (params) => (
-        <Typography
-          variant="subtitle2"
-          color="textSecondary"
-          sx={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {params.value ? params.value : "-"}
-        </Typography>
+        <div className="h-full inline-flex items-center">
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {params.value ? params.value : "-"}
+          </Typography>
+        </div>
       ),
     },
     {
@@ -165,28 +166,31 @@ const GuestTable = ({
       width: 200,
       align: "center",
       renderCell: (params) => (
-        <Typography
-          variant="subtitle2"
-          color="textSecondary"
-          sx={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {params.value ? params.value : "-"}
-        </Typography>
+        <div className="h-full inline-flex items-center">
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {params.value ? params.value : "-"}
+          </Typography>
+        </div>
       ),
     },
     {
       field: "phone",
       headerName: "No Telp",
       width: 150,
-      align: "center",
       renderCell: (params) => (
-        <Typography variant="subtitle2" color="textSecondary">
-          {params.value ? params.value : "-"}
-        </Typography>
+        <div className="h-full inline-flex items-center">
+          <Typography variant="subtitle2" color="textSecondary">
+            {params.value ? params.value : "-"}
+          </Typography>
+        </div>
       ),
     },
     {
@@ -238,6 +242,7 @@ const GuestTable = ({
       ),
     },
   ];
+
   const handleSelectionChange = (selectionModel: any) => {
     const selectedRows = guests.filter((guest) =>
       selectionModel.includes(guest.id)

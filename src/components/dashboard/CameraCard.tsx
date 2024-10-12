@@ -46,7 +46,7 @@ const CameraCard = ({ onQRScanned, snackbarDispatcher }: CameraCardProps) => {
         preferredCamera: "environment",
         highlightScanRegion: true,
         highlightCodeOutline: true,
-        overlay: qrBoxEl?.current || undefined,
+        overlay: qrBoxEl?.current || undefined
       });
 
       scanner?.current
@@ -80,14 +80,9 @@ const CameraCard = ({ onQRScanned, snackbarDispatcher }: CameraCardProps) => {
       onClick={openCloseCamera}
     >
       {cameraOpen ? (
-        <div className="w-full h-full">
-          <video ref={videoEl}></video>
-          <div
-            ref={qrBoxEl}
-            className={`
-             
-             border-2 border-green-500 w-full`}
-          ></div>
+        <div>
+          <video ref={videoEl} style={{ maxWidth: '100%' }}></video>
+          <div ref={qrBoxEl} className={`border-2 border-green-500 w-full`}></div>
         </div>
       ) : (
         <IconCamera style={{ color: "white" }} size={56} />

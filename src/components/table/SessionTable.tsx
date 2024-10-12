@@ -15,8 +15,6 @@ import {
   InputAdornment,
   TableContainer,
   TablePagination,
-  Avatar,
-  Chip,
 } from "@mui/material";
 
 import {
@@ -85,7 +83,7 @@ const SessionTable = ({
   const limit = paginationData?.limit || 10;
 
   return (
-    <Card sx={{ height: "100%", maxHeight: "500px", maxWidth: "900px" }}>
+    <Card sx={{ height: "100%" }}>
       <CardContent>
         <div className="flex flex-col md:flex-row md:items-center items-start">
           <div className="flex mb-4 md:mb-0 flex-grow mr-2 justify-between w-full">
@@ -122,7 +120,7 @@ const SessionTable = ({
           </div>
         </div>
         <Box>
-          <TableContainer sx={{ maxHeight: 350 }}>
+          <TableContainer sx={{ maxHeight: 200 }}>
             <Table
               stickyHeader
               aria-label="simple table"

@@ -14,17 +14,21 @@ export default function RoomPage() {
   return (
     <>
       <PageContainer title="Siensi" description="presensi">
-        <RoomTable
-          paginationData={roomController.getPaginationData()}
-          onAddClicked={roomController.handleOpenDialogAdd}
-          onEditClicked={roomController.handleOpenDialogEdit}
-          onSearching={(query) => roomController.setPaginationSearch(query)}
-          onPageChanged={(page) => roomController.setPaginationPage(page)}
-          onDeleteClicked={(guest) => roomController.removeGuest(guest)}
-          onRowsPerPageChange={(limit) =>
-            roomController.setPaginationLimit(limit)
-          }
-        />
+        <div className="flex justify-center">
+          <div className="max-w-[900px] w-full">
+            <RoomTable
+              paginationData={roomController.getPaginationData()}
+              onAddClicked={roomController.handleOpenDialogAdd}
+              onEditClicked={roomController.handleOpenDialogEdit}
+              onSearching={(query) => roomController.setPaginationSearch(query)}
+              onPageChanged={(page) => roomController.setPaginationPage(page)}
+              onDeleteClicked={(guest) => roomController.removeGuest(guest)}
+              onRowsPerPageChange={(limit) =>
+                roomController.setPaginationLimit(limit)
+              }
+            />
+          </div>
+        </div>
       </PageContainer>
 
       <ConsecutiveSnackbars controller={snackbarController} />

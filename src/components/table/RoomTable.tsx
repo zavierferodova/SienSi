@@ -75,8 +75,8 @@ const RoomTable = ({
   const columns: GridColDef[] = [
     {
       field: "name",
-      headerName: "Nama",
       width: 200,
+      headerName: "Nama",
       renderCell: (params) => (
         <Typography
           sx={{
@@ -93,7 +93,9 @@ const RoomTable = ({
     {
       field: "description",
       headerName: "Deskripsi",
-      width: 600,
+      headerAlign: "center",
+      align: "center",
+      width: 400,
       renderCell: (params) => (
         <Typography
           sx={{
@@ -110,17 +112,18 @@ const RoomTable = ({
     {
       field: "actions",
       headerName: "Aksi",
-      width: 300,
+      headerAlign: "center",
+      width: 250,
       align: "center",
       renderCell: (params) => (
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" justifyContent="center" spacing={1}>
           <IconButton
             aria-label="view"
             component={Link}
             href={`/room/${params.row.id}`}
-            >
-        <IconEye size={20} />
-      </IconButton>
+          >
+            <IconEye size={20} />
+          </IconButton>
           <IconButton
             aria-label="edit"
             onClick={() => {
