@@ -35,12 +35,12 @@ export default function SessionPage({
                     {
                       data: [
                         {
-                          label: "Tidak Hadir",
-                          value: 100 - attendanceController.attendancePercentage,
-                        },
-                        {
                           label: "Hadir",
                           value: attendanceController.attendancePercentage,
+                        },
+                        {
+                          label: "Tidak Hadir",
+                          value: 100 - attendanceController.attendancePercentage,
                         },
                       ],
                       highlightScope: { fade: "global", highlight: "item" },
