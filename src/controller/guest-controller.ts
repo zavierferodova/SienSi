@@ -34,6 +34,7 @@ export function useGuestController(
     setPaginationDialogMode("add");
     setOpenPaginationDialog(true);
   };
+
   const handleSendAllQrCode = async () => {
     const response = await sendAllQrCode(roomId);
     if (response) {

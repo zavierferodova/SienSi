@@ -3,8 +3,8 @@ import { getAuthData, updateAccessToken } from "@/data/auth-provider";
 import AuthModel from "@/model/auth";
 import Cookie from "js-cookie";
 import { NextRequest } from "next/server";
-import CryptoJS from "crypto-js";
-import AES from "crypto-js/aes";
+import CryptoJS from "crypto-es";
+import { AES } from "crypto-es/lib/aes";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const setSessionDocumentCookie = (cookie: string) => {

@@ -67,6 +67,7 @@ export default function DetailRoomPage({ params }: { params: { id: string } }) {
             </div>
           </div>
           <GuestTable
+            onSendAllQrCode={guestController.handleSendAllQrCode}
             paginationData={guestController.getPaginationData()}
             onAddClicked={guestController.handleOpenDialogAdd}
             onEditClicked={guestController.handleOpenDialogEdit}

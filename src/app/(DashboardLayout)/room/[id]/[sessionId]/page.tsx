@@ -7,8 +7,6 @@ import { useAttendanceController } from "@/controller/attendance-controller";
 import { PieChart } from "@mui/x-charts";
 import DialogDetailAttendance from "@/components/dialog/DialogDetailAttendance";
 
-export const valueFormatter = (item: { value: number }) => `${item.value}%`;
-
 export default function SessionPage({
   params,
 }: {
@@ -21,6 +19,8 @@ export default function SessionPage({
     params.id,
     params.sessionId
   );
+
+  const valueFormatter = (item: { value: number }) => `${item.value}%`;
 
   return (
     <>
