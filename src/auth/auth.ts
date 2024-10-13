@@ -4,14 +4,46 @@ import AuthModel from "@/model/auth";
 import Cookie from "js-cookie";
 import { NextRequest } from "next/server";
 import CryptoJS from "crypto-es";
+import { SHA256 } from "crypto-es/lib/sha256";
 import { AES } from "crypto-es/lib/aes";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { SHA512 } from "crypto-es/lib/sha512";
+
+const getSecretKey = () => {
+  const env = process.env["COOKIE_SECRET"] ?? "";
+  const salt = "GUJx1SvnNFTYFw1veVTO";
+  let key = "";
+  
+  if (env !== "") {
+    key = SHA256(env.trim()).toString();
+    const part1 = key.slice(0, 32);
+    const part2 = key.slice(32, 64);
+    const hash1 = SHA256(salt + part1).toString();
+    const hash2 = SHA256(part2 + salt).toString();
+    key = SHA512(hash1 + hash2).toString();
+    return key;
+  } else {
+    key = SHA256(salt).toString();
+    const part1 = key.slice(0, 32);
+    const part2 = key.slice(32, 64);
+    const hash1 = SHA256(part1 + salt).toString();
+    const hash2 = SHA256(salt + part2).toString();
+    key = SHA512(hash1 + hash2).toString();
+  }
+
+  return key;
+}
+
+const encryptCookie = (cookie: string) => {
+  return AES.encrypt(cookie, getSecretKey()).toString();
+}
+
+const decryptCookie = (cookie: string) => {
+  return AES.decrypt(cookie, getSecretKey()).toString(CryptoJS.enc.Utf8);
+}
 
 const setSessionDocumentCookie = (cookie: string) => {
-  const encryptedCookie = AES.encrypt(
-    cookie,
-    process.env["COOKIE_SECRET"]!.trim()
-  ).toString();
+  const encryptedCookie = encryptCookie(cookie);
   Cookie.set("session", encryptedCookie, { expires: 30 });
 };
 
@@ -37,10 +69,7 @@ const getSessionData = (): AuthModel | null => {
     const cookie = Cookie.get("session");
 
     if (cookie) {
-      const decryptedCookie = AES.decrypt(
-        cookie,
-        process.env["COOKIE_SECRET"]?.trim() ?? ""
-      ).toString(CryptoJS.enc.Utf8);
+      const decryptedCookie = decryptCookie(cookie);
       return JSON.parse(decryptedCookie) as AuthModel;
     }
 
@@ -55,10 +84,7 @@ const getSessionDataFromRequest = (request: NextRequest): AuthModel | null => {
     const cookie = request.cookies.get("session");
 
     if (cookie) {
-      const decryptedCookie = AES.decrypt(
-        cookie.value,
-        process.env["COOKIE_SECRET"]?.trim() ?? ""
-      ).toString(CryptoJS.enc.Utf8);
+      const decryptedCookie = decryptCookie(cookie.value);
       return JSON.parse(decryptedCookie) as AuthModel;
     }
 

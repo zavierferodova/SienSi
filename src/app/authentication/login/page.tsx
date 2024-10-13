@@ -3,7 +3,7 @@ import { Grid, Box, Card, Typography } from "@mui/material";
 // components
 import PageContainer from "@/components/container/PageContainer";
 import Logo from "@/components/layout/shared/logo/Logo";
-import AuthLogin from "../auth/AuthLogin";
+import AuthLogin from "../../../components/auth/AuthLogin";
 import { useAuthController } from "../../../controller/login-controller";
 
 const Login = () => {
