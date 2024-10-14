@@ -7,7 +7,7 @@ import AuthLogin from "../../../components/auth/AuthLogin";
 import { useAuthController } from "../../../controller/login-controller";
 
 const Login = () => {
-  const { authError, loginAction } = useAuthController();
+  const { loginAction, authLoading, authError } = useAuthController();
 
   return (
     <PageContainer title="Login | Siensi" description="Login Page">
@@ -50,6 +50,7 @@ const Login = () => {
                 <Logo />
               </Box>
               <AuthLogin
+                authLoading={authLoading}
                 authError={authError}
                 onSubmit={loginAction}
                 subtext={

@@ -74,7 +74,7 @@ export function useAttendanceController(
   const checkAttendance = async (guestKey: string) => {
     snackbarDispatcher("Melakukan presensi...", "info");
     const response = await fetchAttendanceCheck(guestKey);
-    console.log(response);
+    
     if (response === "success") {
       snackbarDispatcher("Berhasil melakukan presensi!", "success");
       performFetchPagination();

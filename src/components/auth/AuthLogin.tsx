@@ -4,6 +4,7 @@ import { Box, Typography, Button, Stack } from "@mui/material";
 import CustomTextField from "@/components/forms/theme-elements/CustomTextField";
 
 interface loginType {
+  authLoading?: boolean;
   authError?: boolean;
   title?: string;
   subtitle?: JSX.Element | JSX.Element[];
@@ -12,6 +13,7 @@ interface loginType {
 }
 
 const AuthLogin = ({
+  authLoading,
   authError,
   title,
   subtitle,
@@ -86,13 +88,14 @@ const AuthLogin = ({
         </Stack>
         <Box>
           <Button
+            disabled={authLoading}
             color="primary"
             variant="contained"
             size="large"
             fullWidth
             type="submit"
           >
-            Sign In
+            {authLoading ? "Loading..." : "Login"}
           </Button>
         </Box>
         {subtitle}
