@@ -56,6 +56,7 @@ type GuestTableProps = {
   };
   onAddClicked?: () => void;
   onSendAllQrCode?: () => void;
+  onSendGuestQrCode?: (guestId: string) => void;
   onEditClicked?: (guest: GuestModel) => void;
   onDeleteClicked?: (id: string) => void;
   onQRImageClicked?: (id: string) => void;
@@ -68,6 +69,7 @@ const GuestTable = ({
   paginationData,
   onAddClicked,
   onSendAllQrCode,
+  onSendGuestQrCode,
   onEditClicked,
   onDeleteClicked,
   onQRImageClicked,
@@ -202,16 +204,28 @@ const GuestTable = ({
       width: 100,
       align: "center",
       renderCell: (params) => (
-        <IconButton
-          aria-label="view qr"
-          onClick={() => {
-            if (onQRImageClicked) {
-              onQRImageClicked(params.row.id);
-            }
-          }}
-        >
-          <IconEye size={20} />
-        </IconButton>
+         <Stack direction="row" spacing={1}>
+           <IconButton
+            aria-label="view qr"
+            onClick={() => {
+              if (onQRImageClicked) {
+                onQRImageClicked(params.row.id);
+              }
+            }}
+          >
+            <IconEye size={20} />
+          </IconButton>
+          <IconButton
+            aria-label="send qr"
+            onClick={() => {
+              if (onSendGuestQrCode) {
+                onSendGuestQrCode(params.row.id);
+              }
+            }}
+          >
+            <IconSend size={20} />
+          </IconButton>
+         </Stack>
       ),
     },
     {
@@ -294,7 +308,7 @@ const GuestTable = ({
               ),
             }}
           />
-          <Tooltip title="Kirim kode QR ke tamu">
+          <Tooltip title="Kirim kode QR ke semua tamu">
             <Button
               variant="contained"
               size="small"
